@@ -2,23 +2,15 @@ package battletanks.game;
 
 public class GameInput {
 	
-	public void setInputType(INPUT_TYPE t){
-		
-	}
+	private enum INPUT_TYPE;
 	
-	public void setInputTime(float t){
-		
+	public void setInputType(INPUT_TYPE t){
+		this.INPUT_TYPE = t;
 	}
 
 	public INPUT_TYPE getInputType(){
-		return null;
+		return this.INPUT_TYPE;
 		
 	}
-	
-	public float getInputTime(){
-		return 0;
-		
-	}
-
 }
 
