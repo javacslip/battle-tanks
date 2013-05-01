@@ -32,33 +32,33 @@ public class Bullet implements GameObject {
 	}
 
 	@Override
-	public Vector3f setPos() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Vector3f setVel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Vector2d setBoundingBox() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Vector3f setDirection() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void Update(long dtime) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void setPos(float x, float y, float z) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setVel(float x, float y, float z) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setBoundingBox(Vector2d v) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setDirection(float x, float y, float z) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
