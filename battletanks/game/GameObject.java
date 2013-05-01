@@ -10,10 +10,10 @@ public interface GameObject {
 	public Vector2d getBoundingBox();
 	public Vector3f getDirection();
 	
-	public Vector3f setPos();
-	public Vector3f setVel();
-	public Vector2d setBoundingBox();
-	public Vector3f setDirection();
+	public void setPos(float x, float y, float z);
+	public void setVel(float x, float y, float z);
+	public void setBoundingBox(Vector2d v);
+	public void setDirection(float x, float y, float z);
 	
 	public void Update(long dtime);
 

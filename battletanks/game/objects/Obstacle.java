@@ -7,7 +7,15 @@ import battletanks.game.GameObject;
 
 
 public class Obstacle implements GameObject {
+	
+	private Vector3f position;
+	private Vector3f direction;
 
+	public Obstacle(){
+		position = new Vector3f(0, 0, 0);
+		direction = new Vector3f(0, 0, 0);
+	}
+	
 	@Override
 	public void Update(long dtime) {
 		// TODO Auto-generated method stub
@@ -17,7 +25,7 @@ public class Obstacle implements GameObject {
 	@Override
 	public Vector3f getPos() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.position;
 	}
 
 	@Override
@@ -35,31 +43,31 @@ public class Obstacle implements GameObject {
 	@Override
 	public Vector3f getDirection() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.direction;
 	}
 
 	@Override
-	public Vector3f setPos() {
-		// TODO Auto-generated method stub
-		return null;
+	public void setPos(float x, float y, float z) {
+		this.position.x = x;
+		this.position.y = y;
+		this.position.z = z;
 	}
 
 	@Override
-	public Vector3f setVel() {
-		// TODO Auto-generated method stub
-		return null;
+	public void setVel(float x, float y, float z) {
+
 	}
 
 	@Override
-	public Vector2d setBoundingBox() {
-		// TODO Auto-generated method stub
-		return null;
+	public void setBoundingBox(Vector2d v) {
+		
 	}
 
 	@Override
-	public Vector3f setDirection() {
-		// TODO Auto-generated method stub
-		return null;
+	public void setDirection(float x, float y, float z) {
+		this.direction.x = x;
+		this.direction.y = y;
+		this.direction.z = z;
 	}
 
 }

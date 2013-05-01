@@ -7,6 +7,14 @@ import battletanks.game.GameObject;
 
 public class PlayerTank implements GameObject {
 
+	private Vector3f velocity;
+	private Vector3f position;
+	private Vector3f direction;
+	
+	public PlayerTank(){
+		
+	}
+	
 	@Override
 	public Vector3f getPos() {
 		// TODO Auto-generated method stub
@@ -25,6 +33,13 @@ public class PlayerTank implements GameObject {
 		return null;
 	}
 
+
+	@Override
+	public void Update(long dtime) {
+		// TODO Auto-generated method stub
+
+	}
+
 	@Override
 	public Vector3f getDirection() {
 		// TODO Auto-generated method stub
@@ -32,33 +47,27 @@ public class PlayerTank implements GameObject {
 	}
 
 	@Override
-	public Vector3f setPos() {
+	public void setPos(float x, float y, float z) {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 
 	@Override
-	public Vector3f setVel() {
+	public void setVel(float x, float y, float z) {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 
 	@Override
-	public Vector2d setBoundingBox() {
+	public void setBoundingBox(Vector2d v) {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 
 	@Override
-	public Vector3f setDirection() {
+	public void setDirection(float x, float y, float z) {
 		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void Update(long dtime) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 }

@@ -1,6 +1,12 @@
 package battletanks.game;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import battletanks.game.objects.EnemyTank;
+import battletanks.game.objects.Obstacle;
+import battletanks.game.objects.PlayerTank;
 
 
 public class Gamestate {
@@ -13,18 +19,18 @@ public class Gamestate {
 	private List<GameInput> playerInput;
 	
 	private Gamestate(){
-		obstacles = new List<GameObject>();
-		enemies = new List<GameObject>();
-		bullets = new List<GameObject>();
-		player = new GameObject;
-		playerInput = new List<GameInput>;
+		obstacles = new ArrayList<GameObject>();
+		enemies = new ArrayList<GameObject>();
+		bullets = new ArrayList<GameObject>();
+		player = new PlayerTank();
+		playerInput = new ArrayList<GameInput>();
 	}
 	
 	public void addObject(GameObject o){
-		if(typeof(o) == Obstacle){
+		if(o instanceof Obstacle){
 			obstacles.add(o);
 		}
-		else if(typeof(o) == EnemyTanks){
+		else if(o instanceof EnemyTank){
 			enemies.add(o);
 		}
 		else{
@@ -34,10 +40,10 @@ public class Gamestate {
 	}
 	
 	public void removeObject(GameObject o){
-		if(typeof(o) == Obstacle){
+		if(o instanceof Obstacle){
 			obstacles.remove(obstacles.indexOf(o));
 		}
-		else if(typeof(o) == EnemyTanks){
+		else if(o instanceof EnemyTank){
 			enemies.remove(enemies.indexOf(o));
 		}
 		else{
@@ -73,39 +79,57 @@ public class Gamestate {
 		playerInput.add(o);
 	}
 	
-	public void UpdateState(long dtime){
-		private enum INPUT;
-		for(GameInput o : playerInput){
-			INPUT = getInputType(o);
-			switch(INPUT){
-			case 1: INPUT = FORWARD_PRESSED;
-			case 2: INPUT = BACKWARD_PRESSED;
-			case 3: INPUT = LEFT_PRESSED;
-			case 4: INPUT = RIGHT_PRESSED;
-			case 5: INPUT = FIRE_PRESSED;
-			case 6: INPUT = FORWARD_RELEASED;
-			case 7: INPUT = BACKWARD_RELEASED;
-			case 8: INPUT = LEFT_RELEASED;
-			case 9: INPUT = RIGHT_RELEASED;
-			case 10: INPUT = FIRE_RELEASED;
+	public void UpdateState(long dtime) {
+		INPUT_TYPE input;
+		for (GameInput o : playerInput) {
+			input = o.getInputType();
+			switch (input) {
+			case FORWARD_PRESSED:
+				break;
+			case BACKWARD_PRESSED:
+				break;
+			case LEFT_PRESSED:
+				break;
+			case RIGHT_PRESSED:
+				break;
+			case FIRE_PRESSED:
+				break;
+			case FORWARD_RELEASED:
+			case BACKWARD_RELEASED:
+			case LEFT_RELEASED:
+			case RIGHT_RELEASED:
+			case FIRE_RELEASED:
+				//player stop
+				break;
 			}
 		}
 	}
 
 	public void setUpMap(){
+		Obstacle ob;
+		EnemyTank et;
+		Random rf = new Random(System.nanoTime());
 		// obstacles
-		for(int i = 0; i < 20; i++){
-			
+		for(int i = 0; i < 10; i++){
+			ob = new Obstacle();
+			ob.setPos(rf.nextFloat() + i, rf.nextFloat() + i, rf.nextFloat() + i);
+			ob.setDirection(rf.nextFloat() + i, rf.nextFloat() + i, rf.nextFloat() + i);
+			addObject(ob);
 		}
 		// enemy tanks
-		for(int i = 0; i < 5; i++){
-			
+		for(int i = 0; i < 2; i++){
+			et = new EnemyTank();
+			et.setPos(rf.nextFloat() + i, rf.nextFloat() + i, rf.nextFloat() + i);
+			et.setDirection(rf.nextFloat() + i, rf.nextFloat() + i, rf.nextFloat() + i);
+			addObject(et);
 		}
 		// player
+		player.setPos(0, 0, 0);
+		player.setDirection(0, 0, 0);
 	}
 	
 	public void reset(){
-		this.instance = null;
+		Gamestate.instance = null;
 	}
 	
 	private static Gamestate instance = null;
