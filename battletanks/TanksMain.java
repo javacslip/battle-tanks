@@ -9,7 +9,9 @@ import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 import javax.swing.JFrame;
 
+import battletanks.game.GameInput;
 import battletanks.game.Gamestate;
+import battletanks.game.INPUT_TYPE;
 import battletanks.graphics.Drawer;
 
 import com.sun.opengl.util.*;
@@ -105,6 +107,8 @@ public class TanksMain extends JFrame implements GLEventListener, KeyListener, M
 	}
 
 	public void mouseReleased(MouseEvent e) {
+		
+	
 	}
 
 	public void mouseDragged(MouseEvent e) {
@@ -132,14 +136,58 @@ public class TanksMain extends JFrame implements GLEventListener, KeyListener, M
 		case KeyEvent.VK_ESCAPE:
 		case KeyEvent.VK_Q:
 			System.exit(0);
+		case KeyEvent.VK_W:		
+			Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.FORWARD_PRESSED));
+		case KeyEvent.VK_UP:		
+			Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.FORWARD_PRESSED));
+		case KeyEvent.VK_S:		
+			Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.BACKWARD_PRESSED));
+		case KeyEvent.VK_DOWN:		
+			Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.FORWARD_PRESSED));
+		case KeyEvent.VK_A:		
+			Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.LEFT_PRESSED));
+		case KeyEvent.VK_LEFT:		
+			Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.LEFT_PRESSED));
+		case KeyEvent.VK_D:		
+			Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.RIGHT_PRESSED));
+		case KeyEvent.VK_RIGHT:		
+			Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.RIGHT_PRESSED));
+		case KeyEvent.VK_SPACE:		
+			Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.FIRE_PRESSED));
 		}
 		
+	}
+	
+	public void keyReleased(KeyEvent e) {		
+		switch(e.getKeyCode()) {
+			case KeyEvent.VK_ESCAPE:
+			case KeyEvent.VK_Q:
+				System.exit(0);
+			case KeyEvent.VK_W:		
+				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.FORWARD_RELEASED));
+			case KeyEvent.VK_UP:		
+				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.FORWARD_RELEASED));
+			case KeyEvent.VK_S:		
+				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.BACKWARD_RELEASED));
+			case KeyEvent.VK_DOWN:		
+				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.BACKWARD_RELEASED));
+			case KeyEvent.VK_A:		
+				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.LEFT_RELEASED));
+			case KeyEvent.VK_LEFT:		
+				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.LEFT_RELEASED));
+			case KeyEvent.VK_D:		
+				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.RIGHT_RELEASED));
+			case KeyEvent.VK_RIGHT:		
+				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.RIGHT_RELEASED));
+			case KeyEvent.VK_SPACE:		
+				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.FIRE_RELEASED));
+		}
 	}
 
 	// these event functions are not used for this assignment
 	// but may be useful in the future
 	public void keyTyped(KeyEvent e) { }
-	public void keyReleased(KeyEvent e) { }
+
 	public void mouseMoved(MouseEvent e) { }
 	public void actionPerformed(ActionEvent e) { }
 	public void mouseClicked(MouseEvent e) { }

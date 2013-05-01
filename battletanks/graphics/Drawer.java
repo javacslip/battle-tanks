@@ -10,7 +10,7 @@ import battletanks.game.Gamestate;
 
 public class Drawer {
 	
-	private objModel station;
+	private objModel tankmodel;
 	
 	
 	GL gl;
@@ -38,8 +38,6 @@ public class Drawer {
 		this.gl = gl;
 		this.glu = glu;
 		this.glut = glut;
-		
-		
 
 		
 		gl.glClearColor(.05f, .05f, .05f, 1f);
@@ -58,7 +56,7 @@ public class Drawer {
 	}
 
 	public void LoadRes(){
-		//station = new objModel("station.obj");
+		tankmodel = new objModel("./obj/tank.obj");
 		
 	}
 	
@@ -97,7 +95,7 @@ public class Drawer {
 			gl.glTranslatef(ob.getPos().x,ob.getPos().y,ob.getPos().z);
 			gl.glRotatef(ob.getPhi(), 0, 0, 1.0f);
 			gl.glRotatef(ob.getTheta(), 0, 0, 1.0f);
-			glut.glutSolidSphere(0.4, 40, 40);
+			tankmodel.Draw(gl);
 			gl.glPopMatrix();
 		}
 		
