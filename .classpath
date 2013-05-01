@@ -12,5 +12,6 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="battle-tanks/lib/jogl-1.1.1-windows-i586/lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/vecmath.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>
