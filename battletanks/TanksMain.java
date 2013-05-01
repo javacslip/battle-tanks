@@ -13,6 +13,7 @@ import battletanks.game.Gamestate;
 import battletanks.graphics.Drawer;
 
 import com.sun.opengl.util.*;
+
 import java.nio.ByteBuffer;
 
 
@@ -28,7 +29,10 @@ public class TanksMain extends JFrame implements GLEventListener, KeyListener, M
 	private float tx = 0.0f, ty = 0.0f;
 	private float scale = 1.0f;
 	private float angle = 0.0f;
+	private FPSAnimator animator;
 	Drawer draw;
+	Gamestate gs;
+	private long time = System.nanoTime();
 
 	public static void main(String args[]) {
 		new TanksMain();
@@ -46,29 +50,25 @@ public class TanksMain extends JFrame implements GLEventListener, KeyListener, M
 		setSize(winW, winH);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
+		animator = new FPSAnimator(canvas, 30);	// create a 30 fps animator
+		animator.start();
 		canvas.requestFocus();
-		mainLoop();
+		
 		
 	}
 	
-	public void mainLoop(){
-		long time = System.nanoTime();
-		Gamestate gs = Gamestate.getInstance();
-		
-		while(true){
-			long elapsedtime = System.nanoTime() - time;
-			time = System.nanoTime();
-			
-			gs.UpdateState(elapsedtime);
-			
-			draw.Draw(gs);
-			
-		}
-		
-	}
+
 	
 	// gl display function
 	public void display(GLAutoDrawable drawable) {
+		
+		
+		long elapsedtime = System.nanoTime() - time;
+		time = System.nanoTime();
+		
+		gs.UpdateState(elapsedtime);
+		
+		draw.Draw(gs);
 		
 	}
 
@@ -83,6 +83,7 @@ public class TanksMain extends JFrame implements GLEventListener, KeyListener, M
 		GLU glu = new GLU();
 		GLUT glut = new GLUT();
 		draw = new Drawer(gl, glu, glut);
+		gs = Gamestate.getInstance();
 		
 		
 	}
