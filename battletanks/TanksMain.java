@@ -31,7 +31,6 @@ public class TanksMain extends JFrame implements GLEventListener, KeyListener, M
 	private float angle = 0.0f;
 	private FPSAnimator animator;
 	Drawer draw;
-	Gamestate gs;
 	private long time = System.nanoTime();
 
 	public static void main(String args[]) {
@@ -66,9 +65,9 @@ public class TanksMain extends JFrame implements GLEventListener, KeyListener, M
 		long elapsedtime = System.nanoTime() - time;
 		time = System.nanoTime();
 		
-		gs.UpdateState(elapsedtime);
+		Gamestate.getInstance().UpdateState(elapsedtime);
 		
-		draw.Draw(gs);
+		draw.Draw(Gamestate.getInstance());
 		
 	}
 
@@ -83,7 +82,8 @@ public class TanksMain extends JFrame implements GLEventListener, KeyListener, M
 		GLU glu = new GLU();
 		GLUT glut = new GLUT();
 		draw = new Drawer(gl, glu, glut);
-		gs = Gamestate.getInstance();
+		draw.LoadRes();
+		
 		
 		
 	}
