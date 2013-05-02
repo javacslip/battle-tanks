@@ -87,7 +87,7 @@ public class Gamestate {
 	private void processInput(){
 		INPUT_TYPE input;
 		for (GameInput o : playerInput) {
-			System.out.println("input:" + o.getInputType().name());
+			Logger.getInstance().debugVal("LastKey" , o.getInputType().name());
 			input = o.getInputType();
 			switch (input) {
 			case FORWARD_PRESSED:
@@ -105,12 +105,16 @@ public class Gamestate {
 			case FIRE_PRESSED:
 				break;
 			case FORWARD_RELEASED:
+				player.stopForwards();
+				break;
 			case BACKWARD_RELEASED:
-				player.stopAccel();
+				player.stopBackwards();
 				break;
 			case LEFT_RELEASED:
+				player.stopLeft();
+				break;
 			case RIGHT_RELEASED:
-				player.stopRot();
+				player.stopRight();
 				break;
 			case FIRE_RELEASED:
 				//player stop
@@ -122,7 +126,7 @@ public class Gamestate {
 	
 	public void UpdateState(long dtime) {
 		long deltaTime = dtime - lasttime;
-		System.out.println(deltaTime);
+		Logger.getInstance().debugVal("Dtime" , Float.toString(deltaTime));
 		lasttime = dtime;
 		if (deltaTime > 500){
 			deltaTime = 500;

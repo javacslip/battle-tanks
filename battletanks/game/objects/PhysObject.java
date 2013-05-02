@@ -33,8 +33,8 @@ public abstract class PhysObject implements GameObject {
 		rotspeed = new Vector2f(0, 0);
 		rotaccel = new Vector2f(0, 0);
 
-		maxrotaccel = 0.40f;
-		maxrotvel = 1.5f;
+		maxrotaccel = 1f;
+		maxrotvel = 2.5f;
 		maxvel = 0.2f;
 		maxaccel = 0.1f;
 		dragconst = 0.01f;

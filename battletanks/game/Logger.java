@@ -12,6 +12,7 @@ import javax.media.opengl.GL;
 
 import com.sun.opengl.util.GLUT;
 import com.sun.opengl.util.j2d.Overlay;
+import com.sun.opengl.util.j2d.TextRenderer;
 
 public class Logger {
 	HashMap<String,String> debugValues;
@@ -43,28 +44,28 @@ public class Logger {
 	}
 	
 
-	public void display(Overlay overlay) {
+	public void display(TextRenderer renderer) {
 
-		Graphics2D g = overlay.createGraphics();
+
 		Iterator it = debugValues.entrySet().iterator();
-		int x = 10;
-		int y = 10;
+		int x = 100;
+		int y = 100;
+		String key,val;
+		
 		 while (it.hasNext()) {
 			
 			 Map.Entry pairs = (Map.Entry)it.next();
-			 String key = pairs.getKey().toString() + ":";
-			 String val = pairs.getValue().toString();
-			 System.out.println(key); 
-			 g.setColor(Color.GREEN);
-			 g.drawString(key, x,y);
-			 g.drawString(val,x+100, y);
+			 key = pairs.getKey().toString() + ":";
+			 val = pairs.getValue().toString();
+			 
+			 renderer.setColor(Color.GREEN);
+			 renderer.draw(key, x,y);
+			 renderer.draw(val,x+100, y);
 			 
 			 y+= 16;
 
 		 }
-		
-		overlay.drawAll();
-		g.dispose();
+
 
 	
 		

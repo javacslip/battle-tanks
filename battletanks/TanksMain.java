@@ -17,6 +17,7 @@ import battletanks.graphics.Drawer;
 
 import com.sun.opengl.util.*;
 import com.sun.opengl.util.j2d.Overlay;
+import com.sun.opengl.util.j2d.TextRenderer;
 
 
 import java.nio.ByteBuffer;
@@ -37,6 +38,7 @@ public class TanksMain extends JFrame implements GLEventListener, KeyListener, M
 	private FPSAnimator animator;
 	Drawer draw;
 	private long time = System.nanoTime();
+	TextRenderer renderer;
 
 	public static void main(String args[]) {
 		new TanksMain();
@@ -72,10 +74,15 @@ public class TanksMain extends JFrame implements GLEventListener, KeyListener, M
 		
 		Gamestate.getInstance().UpdateState(time);
 		
-		draw.Draw(Gamestate.getInstance(), drawable);
-		Overlay overlay = new Overlay(drawable);
-		Logger.getInstance().display(overlay);
+		draw.Draw(Gamestate.getInstance());
 		
+		
+		renderer.beginRendering(drawable.getWidth(), drawable.getHeight());
+		Logger.getInstance().display(renderer);
+		renderer.endRendering();
+		
+
+
 	}
 
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
@@ -88,6 +95,7 @@ public class TanksMain extends JFrame implements GLEventListener, KeyListener, M
 		gl.setSwapInterval(1);
 		GLU glu = new GLU();
 		GLUT glut = new GLUT();
+		renderer = new TextRenderer(new Font("sansserif", Font.BOLD, 22));
 		draw = new Drawer(gl, glu, glut);
 		draw.LoadRes();
 		
