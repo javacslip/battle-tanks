@@ -55,10 +55,22 @@ public class Bullet implements GameObject {
 		
 	}
 
+
+
 	@Override
-	public void setDirection(float x, float y, float z) {
+	public float getPhi() {
 		// TODO Auto-generated method stub
-		
+		return 0;
 	}
 
+	@Override
+	public float getTheta() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public void setDirection(float theta, float phi) {
+
+		
+	}
 }

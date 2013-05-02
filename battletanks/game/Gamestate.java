@@ -15,7 +15,7 @@ public class Gamestate {
 	private List<GameObject> enemies;
 	private List<GameObject> bullets;
 	
-	private GameObject player;
+	private PlayerTank player;
 	private List<GameInput> playerInput;
 	
 	private Gamestate(){
@@ -24,6 +24,7 @@ public class Gamestate {
 		bullets = new ArrayList<GameObject>();
 		player = new PlayerTank();
 		playerInput = new ArrayList<GameInput>();
+		setUpMap();
 	}
 	
 	public void addObject(GameObject o){
@@ -80,17 +81,31 @@ public class Gamestate {
 	}
 	
 	public void UpdateState(long dtime) {
+		
+		System.out.println("pos:" + player.getPos());
+		System.out.println("dir:" + player.getDirection());
+		System.out.println("theta:" + player.getTheta() + " phi:" + player.getPhi());
+		
+
+
+		
+		
 		INPUT_TYPE input;
 		for (GameInput o : playerInput) {
+			System.out.println("input:" + o.getInputType().name());
 			input = o.getInputType();
 			switch (input) {
 			case FORWARD_PRESSED:
+				player.moveForward();
 				break;
 			case BACKWARD_PRESSED:
+				player.moveBackward();
 				break;
 			case LEFT_PRESSED:
+				player.turnLeft();
 				break;
 			case RIGHT_PRESSED:
+				player.turnRight();
 				break;
 			case FIRE_PRESSED:
 				break;
@@ -103,6 +118,7 @@ public class Gamestate {
 				break;
 			}
 		}
+		playerInput.clear();
 	}
 
 	public void setUpMap(){
@@ -112,20 +128,21 @@ public class Gamestate {
 		// obstacles
 		for(int i = 0; i < 10; i++){
 			ob = new Obstacle();
-			ob.setPos(rf.nextFloat() + i, rf.nextFloat() + i, rf.nextFloat() + i);
-			ob.setDirection(rf.nextFloat() + i, rf.nextFloat() + i, rf.nextFloat() + i);
+			ob.setPos(rf.nextFloat() + i, 0, rf.nextFloat() + i);
+			ob.setDirection(rf.nextFloat() + i, rf.nextFloat() + i);
 			addObject(ob);
 		}
 		// enemy tanks
 		for(int i = 0; i < 2; i++){
 			et = new EnemyTank();
-			et.setPos(rf.nextFloat() + i, rf.nextFloat() + i, rf.nextFloat() + i);
-			et.setDirection(rf.nextFloat() + i, rf.nextFloat() + i, rf.nextFloat() + i);
+			et.setPos(rf.nextFloat() + i, 0, rf.nextFloat() + i);
+			et.setDirection(rf.nextFloat() + i, rf.nextFloat() + i);
 			addObject(et);
 		}
 		// player
 		player.setPos(0, 0, 0);
-		player.setDirection(0, 0, 0);
+		player.setDirection(0, 0);
+		
 	}
 	
 	public void reset(){

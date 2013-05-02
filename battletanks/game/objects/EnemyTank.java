@@ -10,6 +10,7 @@ public class EnemyTank implements GameObject {
 	private Vector3f velocity;
 	private Vector3f position;
 	private Vector3f direction;
+	float phi, theta;
 	
 	public EnemyTank(){
 		
@@ -18,13 +19,13 @@ public class EnemyTank implements GameObject {
 	@Override
 	public Vector3f getPos() {
 		// TODO Auto-generated method stub
-		return null;
+		return position;
 	}
 
 	@Override
 	public Vector3f getVel() {
 		// TODO Auto-generated method stub
-		return null;
+		return velocity;
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class EnemyTank implements GameObject {
 	@Override
 	public Vector3f getDirection() {
 		// TODO Auto-generated method stub
-		return null;
+		return direction;
 	}
 
 	@Override
@@ -47,13 +48,13 @@ public class EnemyTank implements GameObject {
 
 	@Override
 	public void setPos(float x, float y, float z) {
-		// TODO Auto-generated method stub
+		position = new Vector3f(x,y,z);
 		
 	}
 
 	@Override
 	public void setVel(float x, float y, float z) {
-		// TODO Auto-generated method stub
+		velocity = new Vector3f(x,y,z);
 		
 	}
 
@@ -63,10 +64,25 @@ public class EnemyTank implements GameObject {
 		
 	}
 
+
+
 	@Override
-	public void setDirection(float x, float y, float z) {
+	public float getPhi() {
 		// TODO Auto-generated method stub
-		
+		return phi;
 	}
 
+	@Override
+	public float getTheta() {
+		// TODO Auto-generated method stub
+		return theta;
+	}
+
+	@Override
+	public void setDirection(float theta, float phi) {
+		direction = new Vector3f((float)(Math.cos(phi) * Math.sin(theta)),(float) (Math.sin(theta) * Math.sin(phi)), (float)Math.cos(theta));
+		this.theta = theta;
+		this.phi = phi;
+		
+	}
 }

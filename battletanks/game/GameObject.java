@@ -13,8 +13,10 @@ public interface GameObject {
 	public void setPos(float x, float y, float z);
 	public void setVel(float x, float y, float z);
 	public void setBoundingBox(Vector2d v);
-	public void setDirection(float x, float y, float z);
+	public void setDirection(float theta, float phi);
 	
 	public void Update(long dtime);
+	public float getPhi();
+	public float getTheta();
 
 }

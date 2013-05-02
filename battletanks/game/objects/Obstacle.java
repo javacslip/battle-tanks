@@ -10,6 +10,8 @@ public class Obstacle implements GameObject {
 	
 	private Vector3f position;
 	private Vector3f direction;
+	private Vector3f velocity;
+	float phi, theta;
 
 	public Obstacle(){
 		position = new Vector3f(0, 0, 0);
@@ -48,26 +50,41 @@ public class Obstacle implements GameObject {
 
 	@Override
 	public void setPos(float x, float y, float z) {
-		this.position.x = x;
-		this.position.y = y;
-		this.position.z = z;
-	}
-
-	@Override
-	public void setVel(float x, float y, float z) {
-
-	}
-
-	@Override
-	public void setBoundingBox(Vector2d v) {
+		position = new Vector3f(x,y,z);
 		
 	}
 
 	@Override
-	public void setDirection(float x, float y, float z) {
-		this.direction.x = x;
-		this.direction.y = y;
-		this.direction.z = z;
+	public void setVel(float x, float y, float z) {
+		velocity = new Vector3f(x,y,z);
+		
+	}
+
+	@Override
+	public void setBoundingBox(Vector2d v) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public float getPhi() {
+		// TODO Auto-generated method stub
+		return phi;
+	}
+
+	@Override
+	public float getTheta() {
+		// TODO Auto-generated method stub
+		return theta;
+	}
+	@Override
+	public void setDirection(float theta, float phi) {
+		direction = new Vector3f((float)(Math.cos(phi) * Math.sin(theta)),(float) (Math.sin(theta) * Math.sin(phi)), (float)Math.cos(theta));
+		this.theta = theta;
+		this.phi = phi;
+		
 	}
 
 }
