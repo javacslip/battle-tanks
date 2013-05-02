@@ -1,126 +1,72 @@
 package battletanks.game.objects;
 
 import javax.vecmath.Vector2d;
+import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
-import battletanks.game.GameObject;
 
-public class PlayerTank implements GameObject {
+public class PlayerTank extends PhysObject {
 
-	private Vector3f velocity;
-	private Vector3f position;
-	private Vector3f direction;
-	float phi, theta;
-
+	private float accelConst = 0.05f;
+	private float rotRate = 0.35f;
 	
 	public PlayerTank(){
+		super();
+	
 		
 	}
 	
 	
 	public void moveForward(){
 		
-		double radphi = Math.toRadians(phi);
-		double radtheta = Math.toRadians(theta);
-		position.x -= (float) Math.sin(radtheta);
-		position.z  += (float)(Math.cos(radtheta));
-		position.y  -= (float) (Math.sin(radphi));
+		Vector2f rot = this.getDir();
+		double radphi = Math.toRadians(rot.y);
+		double radtheta = Math.toRadians(rot.x);
+		Vector3f accel = new Vector3f();
 		
+		accel.x = -(float) Math.sin(radtheta) * accelConst;
+		accel.z = (float)(Math.cos(radtheta)) * accelConst;
+		accel.y = -(float) (Math.sin(radphi)) * accelConst;
+		
+		this.setAccel(accel);
+		
+	}
+	
+	public void stopAccel(){
+		
+		this.setAccel(new Vector3f(0,0,0));
+		
+	}
+	
+	public void stopRot(){
+		
+		this.setDirAccel(new Vector2f(0,0));
 		
 	}
 	
 	public void moveBackward(){
-		double radphi = Math.toRadians(phi);
-		double radtheta = Math.toRadians(theta);
-		position.x += (float) Math.sin(radtheta);
-		position.z  -= (float)(Math.cos(radtheta));		
-		position.y  += (float) (Math.sin(radphi));
+		Vector2f rot = this.getDir();
+		double radphi = Math.toRadians(rot.y);
+		double radtheta = Math.toRadians(rot.x);
+		Vector3f accel = new Vector3f();
+		
+		accel.x = (float) Math.sin(radtheta) * accelConst;
+		accel.z = -(float)(Math.cos(radtheta)) * accelConst;
+		accel.y = +(float) (Math.sin(radphi)) * accelConst;
+		
+		this.setAccel(accel);
 	}
 	
 	public void turnLeft(){
-		setDirection(theta -2.5f,0);
+		Vector2f rot = this.getDirAccel();
+		this.setDirAccel(rot.x -rotRate, rot.y);
 	}
 	
 	public void turnRight(){
-		setDirection(theta +2.5f,0);
+		Vector2f rot = this.getDirAccel();
+		this.setDirAccel(rot.x +rotRate, rot.y);
 	}
 	
-	@Override
-	public Vector3f getPos() {
-		// TODO Auto-generated method stub
-		return this.position;
-	}
 
-	@Override
-	public Vector3f getVel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Vector2d getBoundingBox() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Vector3f getDirection() {
-		return this.direction;
-	}
-
-
-
-	public void Update(long dtime) {
-		// TODO Auto-generated method stub
-
-	}
-
-
-	@Override
-	public void setPos(float x, float y, float z) {
-		position = new Vector3f(x,y,z);
-		
-	}
-	
-	
-
-	@Override
-	public void setVel(float x, float y, float z) {
-		velocity = new Vector3f(x,y,z);
-		
-	}
-
-	@Override
-	public void setBoundingBox(Vector2d v) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	
-
-	@Override
-	public float getPhi() {
-		// TODO Auto-generated method stub
-		return phi;
-	}
-
-	@Override
-	public float getTheta() {
-		// TODO Auto-generated method stub
-		return theta;
-	}
-
-
-	@Override
-	public void setDirection(float theta, float phi) {
-
-		
-
-		
-		
-		this.theta = theta;
-		this.phi = phi;
-		
-	}
 
 }

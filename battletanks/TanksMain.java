@@ -12,9 +12,12 @@ import javax.swing.JFrame;
 import battletanks.game.GameInput;
 import battletanks.game.Gamestate;
 import battletanks.game.INPUT_TYPE;
+import battletanks.game.Logger;
 import battletanks.graphics.Drawer;
 
 import com.sun.opengl.util.*;
+import com.sun.opengl.util.j2d.Overlay;
+
 
 import java.nio.ByteBuffer;
 
@@ -64,12 +67,14 @@ public class TanksMain extends JFrame implements GLEventListener, KeyListener, M
 	public void display(GLAutoDrawable drawable) {
 		
 		
-		long elapsedtime = System.nanoTime() - time;
-		time = System.nanoTime();
+	
+		time = System.currentTimeMillis();
 		
-		Gamestate.getInstance().UpdateState(elapsedtime);
+		Gamestate.getInstance().UpdateState(time);
 		
-		draw.Draw(Gamestate.getInstance());
+		draw.Draw(Gamestate.getInstance(), drawable);
+		Overlay overlay = new Overlay(drawable);
+		Logger.getInstance().display(overlay);
 		
 	}
 

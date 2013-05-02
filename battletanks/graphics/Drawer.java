@@ -1,13 +1,17 @@
 package battletanks.graphics;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
 import javax.vecmath.Vector3f;
 
 import com.sun.opengl.util.GLUT;
+import com.sun.opengl.util.j2d.Overlay;
 
-import battletanks.game.GameObject;
 import battletanks.game.Gamestate;
+import battletanks.game.Logger;
+import battletanks.game.objects.GameObject;
+import battletanks.game.objects.PlayerTank;
 
 public class Drawer {
 	
@@ -17,6 +21,7 @@ public class Drawer {
 	GL gl;
 	GLU glu;
 	GLUT glut;
+
 	
 
 	private boolean cullface = true;
@@ -38,11 +43,13 @@ public class Drawer {
 		this.gl = gl;
 		this.glu = glu;
 		this.glut = glut;
+		
 		znear = 0.01f;
 		zfar  = 1000.f;
 		
-		gl.glClearColor(.05f, .05f, .05f, 1f);
+		gl.glClearColor(.1f, .1f, .1f, 1f);
 		gl.glClearDepth(1.0f);
+		
 		
 
 	    gl.glEnable( GL.GL_NORMALIZE );
@@ -70,7 +77,9 @@ public class Drawer {
 		
 	}
 	
-	public void Draw(Gamestate g){
+	public void Draw(Gamestate g, GLAutoDrawable drawable){
+		gl = drawable.getGL();
+		
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		
 		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);	
@@ -80,15 +89,29 @@ public class Drawer {
 		else
 			gl.glDisable(GL.GL_CULL_FACE);		
 		
+
+	
+		
 		gl.glLoadIdentity();
 		
-		
-		GameObject player = Gamestate.getInstance().getPlayer();
+	  gl.glColor3f(1f,1f,1f);
+	  gl.glRasterPos2f(50, 50);
+	  glut.glutBitmapString(GLUT.BITMAP_HELVETICA_10, "WTF");
+
+		PlayerTank player = (PlayerTank) Gamestate.getInstance().getPlayer();
 		
 		gl.glPushMatrix();
 		
-		moveCamera(player.getPos(), player.getTheta(),player.getPhi());
 		
+		moveCamera(player.getPos(), player.getDir().x,player.getDir().y);
+		
+		
+		gl.glBegin(GL.GL_QUADS);
+		gl.glVertex3f(20.0f, -0.5f, 20.0f);
+		gl.glVertex3f(-20.0f, -0.5f, 20.0f);
+		gl.glVertex3f(-20.0f, -0.5f, -20.0f);
+		gl.glVertex3f(20.0f, -0.5f, -20.0f);
+		gl.glEnd();
 
 
 		
@@ -102,9 +125,9 @@ public class Drawer {
 		for(GameObject ob : Gamestate.getInstance().getObstacles()){
 			gl.glPushMatrix();
 			gl.glTranslatef(ob.getPos().x,ob.getPos().y,ob.getPos().z);
-			gl.glRotatef(ob.getPhi(), 1.0f, 0, 0f);
-			gl.glRotatef(ob.getTheta(), 0, 1.0f, 0);
-			glut.glutSolidSphere(0.4, 40, 40);
+			gl.glRotatef(ob.getDir().x, 1.0f, 0, 0f);
+			gl.glRotatef(ob.getDir().y, 0, 1.0f, 0);
+			glut.glutSolidCube(1);
 			gl.glPopMatrix();
 		}
 		
@@ -112,14 +135,15 @@ public class Drawer {
 		for(GameObject ob : Gamestate.getInstance().getEnemies()){
 			gl.glPushMatrix();
 			gl.glTranslatef(ob.getPos().x,ob.getPos().y,ob.getPos().z);
-			gl.glRotatef(ob.getPhi(), 1.0f, 0, 0f);
-			gl.glRotatef(ob.getTheta(), 0, 1.0f, 0);
+			gl.glRotatef(ob.getDir().x, 1.0f, 0, 0f);
+			gl.glRotatef(ob.getDir().y, 0, 1.0f, 0);
 			tankmodel.Draw(gl);
 			gl.glPopMatrix();
 		}
 		
 
 		gl.glPopMatrix();
+
 		
 	}
 	
@@ -130,7 +154,7 @@ public class Drawer {
 		gl.glViewport(0, 0, width, height);
 		gl.glMatrixMode(GL.GL_PROJECTION);
 			gl.glLoadIdentity();
-			glu.gluPerspective(45.0f, (float)width/(float)height, znear, zfar);
+			glu.gluPerspective(60.0f, (float)width/(float)height, znear, zfar);
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		
 	}

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import battletanks.game.objects.EnemyTank;
+import battletanks.game.objects.GameObject;
 import battletanks.game.objects.Obstacle;
 import battletanks.game.objects.PlayerTank;
 
@@ -18,7 +19,10 @@ public class Gamestate {
 	private PlayerTank player;
 	private List<GameInput> playerInput;
 	
+	long lasttime;
+	
 	private Gamestate(){
+		lasttime = System.currentTimeMillis();
 		obstacles = new ArrayList<GameObject>();
 		enemies = new ArrayList<GameObject>();
 		bullets = new ArrayList<GameObject>();
@@ -80,16 +84,7 @@ public class Gamestate {
 		playerInput.add(o);
 	}
 	
-	public void UpdateState(long dtime) {
-		
-		System.out.println("pos:" + player.getPos());
-		System.out.println("dir:" + player.getDirection());
-		System.out.println("theta:" + player.getTheta() + " phi:" + player.getPhi());
-		
-
-
-		
-		
+	private void processInput(){
 		INPUT_TYPE input;
 		for (GameInput o : playerInput) {
 			System.out.println("input:" + o.getInputType().name());
@@ -111,8 +106,12 @@ public class Gamestate {
 				break;
 			case FORWARD_RELEASED:
 			case BACKWARD_RELEASED:
+				player.stopAccel();
+				break;
 			case LEFT_RELEASED:
 			case RIGHT_RELEASED:
+				player.stopRot();
+				break;
 			case FIRE_RELEASED:
 				//player stop
 				break;
@@ -120,28 +119,47 @@ public class Gamestate {
 		}
 		playerInput.clear();
 	}
+	
+	public void UpdateState(long dtime) {
+		long deltaTime = dtime - lasttime;
+		System.out.println(deltaTime);
+		lasttime = dtime;
+		if (deltaTime > 500){
+			deltaTime = 500;
+		}
+		
+		processInput();
+		
+		for(GameObject go : enemies){
+			//go.update(deltaTime);
+		}
+		
+		player.update(deltaTime);
+		
+
+	}
 
 	public void setUpMap(){
 		Obstacle ob;
 		EnemyTank et;
 		Random rf = new Random(System.nanoTime());
 		// obstacles
-		for(int i = 0; i < 10; i++){
+		for(int i = 0; i < 30; i++){
 			ob = new Obstacle();
-			ob.setPos(rf.nextFloat() + i, 0, rf.nextFloat() + i);
-			ob.setDirection(rf.nextFloat() + i, rf.nextFloat() + i);
+			ob.setPos(rf.nextFloat() * 20 - 10, 0, rf.nextFloat() * 20 - 10);
+			ob.setDir(0, rf.nextFloat() * 180);
 			addObject(ob);
 		}
 		// enemy tanks
-		for(int i = 0; i < 2; i++){
+		for(int i = 0; i < 5; i++){
 			et = new EnemyTank();
-			et.setPos(rf.nextFloat() + i, 0, rf.nextFloat() + i);
-			et.setDirection(rf.nextFloat() + i, rf.nextFloat() + i);
+			et.setPos(rf.nextFloat() * 20 - 10, 0, rf.nextFloat() * 20 - 10);
+			et.setDir(0, rf.nextFloat() * 180);
 			addObject(et);
 		}
 		// player
 		player.setPos(0, 0, 0);
-		player.setDirection(0, 0);
+		player.setDir(0, 0);
 		
 	}
 	
