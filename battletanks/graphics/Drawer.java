@@ -46,7 +46,7 @@ public class Drawer {
 	}
 
 	public void LoadRes() {
-		tankmodel = new objModel(".\\obj\\tank.obj");
+		tankmodel = new objModel(".\\obj\\tankalt.obj");
 
 	}
 
@@ -137,7 +137,7 @@ public class Drawer {
 		gl.glViewport(0, 0, width, height);
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
-		glu.gluPerspective(60.0f, (float) width / (float) height, znear, zfar);
+		glu.gluPerspective(40.0f, (float) width / (float) height, znear, zfar);
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 
 	}
