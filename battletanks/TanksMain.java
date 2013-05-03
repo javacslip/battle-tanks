@@ -32,8 +32,9 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 
 	// mouse control variables
 	private boolean debugOut = true;
+	boolean fullscreen = true;
 	private final GLCanvas canvas;
-	private int winW = 1680, winH = 1050;
+	private int winW = 1440, winH = 900;
 	private Point center = new Point(winW/2, winH/2);;
 	private FPSAnimator animator;
 	Drawer draw;
@@ -69,7 +70,12 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 		animator.start();
 		canvas.requestFocus();
 
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
+
+		ge.getDefaultScreenDevice().setFullScreenWindow(this);
+		
+		
+		//this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		
 		
 		Rectangle r=this.getBounds();
