@@ -31,7 +31,7 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 		MouseListener, MouseMotionListener, ActionListener {
 
 	// mouse control variables
-	private boolean debugOut = false;
+	private boolean debugOut = true;
 	private final GLCanvas canvas;
 	private int winW = 1680, winH = 1050;
 	private Point center = new Point(winW/2, winH/2);;

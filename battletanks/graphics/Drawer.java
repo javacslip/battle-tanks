@@ -93,14 +93,16 @@ public class Drawer {
 	}
 
 	private void DrawBackground() {
+		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_LINE);
 		gl.glColor3f(0, 1, 0);
 		gl.glPushMatrix();
 		gl.glBegin(GL2.GL_QUADS);
-		gl.glVertex3f(20.0f, -0.5f, -20.0f);
-		gl.glVertex3f(-20.0f, -0.5f, -20.0f);
-		gl.glVertex3f(-20.0f, -0.5f, 20.0f);
-		gl.glVertex3f(20.0f, -0.5f, 20.0f);
+		gl.glVertex3f(500.0f, -0.5f, -500.0f);
+		gl.glVertex3f(-500.0f, -0.5f, -500.0f);
+		gl.glVertex3f(-500.0f, -0.5f, 500.0f);
+		gl.glVertex3f(500.0f, -0.5f, 500.0f);
 		gl.glEnd();
+		gl.glPopMatrix();
 
 	}
 
@@ -113,6 +115,7 @@ public class Drawer {
 
 		gl.glLoadIdentity();
 		gl.glPushMatrix();
+		DrawBackground();
 
 		PlayerTank player = (PlayerTank) Gamestate.getInstance().getPlayer();
 
