@@ -180,22 +180,31 @@ public class TanksMain extends JFrame implements GLEventListener, KeyListener, M
 				System.exit(0);
 			case KeyEvent.VK_W:		
 				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.FORWARD_RELEASED));
+				break;
 			case KeyEvent.VK_UP:		
 				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.FORWARD_RELEASED));
+				break;
 			case KeyEvent.VK_S:		
 				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.BACKWARD_RELEASED));
+				break;
 			case KeyEvent.VK_DOWN:		
 				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.BACKWARD_RELEASED));
+				break;
 			case KeyEvent.VK_A:		
 				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.LEFT_RELEASED));
+				break;
 			case KeyEvent.VK_LEFT:		
 				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.LEFT_RELEASED));
+				break;
 			case KeyEvent.VK_D:		
 				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.RIGHT_RELEASED));
+				break;
 			case KeyEvent.VK_RIGHT:		
 				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.RIGHT_RELEASED));
+				break;
 			case KeyEvent.VK_SPACE:		
 				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.FIRE_RELEASED));
+				break;
 		}
 	}
 
