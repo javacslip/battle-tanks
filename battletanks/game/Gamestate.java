@@ -18,6 +18,8 @@ public class Gamestate {
 	
 	private PlayerTank player;
 	private List<GameInput> playerInput;
+	int mousex = 0;
+	int mousey = 0;
 	
 	long lasttime;
 	
@@ -83,6 +85,10 @@ public class Gamestate {
 	public void AddInput(GameInput o){
 		playerInput.add(o);
 	}
+	public void AddInput(int x, int y){
+		mousex = x;
+		mousey = y;
+	}
 	
 	private void processInput(){
 		INPUT_TYPE input;
@@ -146,13 +152,14 @@ public class Gamestate {
 	}
 
 	public void setUpMap(){
+		
 		Obstacle ob;
 		EnemyTank et;
 		Random rf = new Random(System.nanoTime());
 		// obstacles
 		for(int i = 0; i < 30; i++){
 			ob = new Obstacle();
-			ob.setPos(rf.nextFloat() * 20 - 10, 0, rf.nextFloat() * 20 - 10);
+			ob.setPos(rf.nextFloat() * 20 - 10, .25f, rf.nextFloat() * 20 - 10);
 			ob.setDir(0, rf.nextFloat() * 180);
 			addObject(ob);
 		}

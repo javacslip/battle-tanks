@@ -5,8 +5,11 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
 import javax.vecmath.Vector3f;
 
-import com.sun.opengl.util.GLUT;
-import com.sun.opengl.util.j2d.Overlay;
+import javax.media.opengl.*;
+import javax.media.opengl.awt.GLCanvas;
+
+import com.sun.opengl.util.awt.TextRenderer;
+import com.sun.opengl.util.gl2.GLUT;
 
 import battletanks.game.Gamestate;
 import battletanks.game.Logger;
@@ -17,42 +20,28 @@ public class Drawer {
 
 	private objModel tankmodel;
 
-	GL gl;
+	GL2 gl;
 	GLU glu;
 	GLUT glut;
-
-	private boolean cullface = true;
-	private boolean flatshade = false;
-
 	private float znear, zfar;
 
-	/*
-	 * Here you should give a conservative estimate of the scene's bounding box
-	 * so that the initViewParameters function can calculate proper
-	 * transformation parameters to display the initial scene. If these are not
-	 * set correctly, the objects may disappear on start.
-	 */
+	public Drawer(GL2 gl2, GLU glu, GLUT glut) {
 
-	public Drawer(GL gl, GLU glu, GLUT glut) {
-
-		this.gl = gl;
+		this.gl = gl2;
 		this.glu = glu;
 		this.glut = glut;
 
 		znear = 0.01f;
 		zfar = 1000.f;
 
-		gl.glClearColor(.1f, .1f, .1f, 1f);
-		gl.glClearDepth(1.0f);
+		gl2.glClearColor(.1f, .1f, .1f, 1f);
+		gl2.glClearDepth(1.0f);
 
-		gl.glEnable(GL.GL_NORMALIZE);
-		gl.glEnable(GL.GL_DEPTH_TEST);
-		gl.glDepthFunc(GL.GL_LESS);
-		gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
-		gl.glCullFace(GL.GL_BACK);
-		gl.glEnable(GL.GL_CULL_FACE);
-		gl.glShadeModel(GL.GL_SMOOTH);
-		gl.glDisable(GL.GL_LIGHTING);
+		gl2.glEnable(GL.GL_DEPTH_TEST);
+		gl2.glDepthFunc(GL.GL_LESS);
+		gl2.glHint(GL.GL_LINE_SMOOTH_HINT, GL.GL_NICEST);
+		gl2.glCullFace(GL.GL_BACK);
+		gl2.glEnable(GL.GL_CULL_FACE);
 
 	}
 
@@ -68,15 +57,15 @@ public class Drawer {
 		gl.glTranslatef(pos.x, pos.y, pos.z);
 
 	}
-	
-	private  void DrawGeometry(){
-		gl.glColor3f(0.5F, 0.5F, .5F);
-		gl.glPushMatrix();
-		gl.glTranslatef(1, 1, -10);
-		glut.glutSolidCube(10);
-		gl.glPopMatrix();
 
-		gl.glColor3f(0.5F, 0.5F, .5F);
+	private void DrawGeometry(Vector3f color) {
+		gl.glPushMatrix();
+		gl.glLineWidth(3);
+
+		if (color == null)
+			gl.glColor3f(0.5F, 0.5F, .5F);
+		else
+			gl.glColor3f(color.x, color.y, color.z);
 		for (GameObject ob : Gamestate.getInstance().getObstacles()) {
 			gl.glPushMatrix();
 			gl.glTranslatef(ob.getPos().x, ob.getPos().y, ob.getPos().z);
@@ -85,8 +74,12 @@ public class Drawer {
 			glut.glutSolidCube(1);
 			gl.glPopMatrix();
 		}
+		
+		if (color == null)
+			gl.glColor3f(0.9F, 0.0F, .0F);
+		else
+			gl.glColor3f(color.x, color.y, color.z);
 
-		gl.glColor3f(0.9F, 0.0F, .0F);
 		for (GameObject ob : Gamestate.getInstance().getEnemies()) {
 			gl.glPushMatrix();
 			gl.glTranslatef(ob.getPos().x, ob.getPos().y, ob.getPos().z);
@@ -98,53 +91,54 @@ public class Drawer {
 
 		gl.glPopMatrix();
 	}
-	
-	
-	public void Draw(Gamestate g) {
 
-		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-
-		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
-		gl.glEnable( GL.GL_POLYGON_OFFSET_FILL );
-		gl.glPolygonOffset( 1, 1 );
-		gl.glShadeModel(flatshade ? GL.GL_FLAT : GL.GL_SMOOTH);
-		if (cullface)
-			gl.glEnable(GL.GL_CULL_FACE);
-		else
-			gl.glDisable(GL.GL_CULL_FACE);
-
-		gl.glLoadIdentity();
-
-
-		PlayerTank player = (PlayerTank) Gamestate.getInstance().getPlayer();
-
+	private void DrawBackground() {
+		gl.glColor3f(0, 1, 0);
 		gl.glPushMatrix();
-
-		gl.glBegin(GL.GL_QUADS);
+		gl.glBegin(GL2.GL_QUADS);
 		gl.glVertex3f(20.0f, -0.5f, -20.0f);
 		gl.glVertex3f(-20.0f, -0.5f, -20.0f);
 		gl.glVertex3f(-20.0f, -0.5f, 20.0f);
 		gl.glVertex3f(20.0f, -0.5f, 20.0f);
 		gl.glEnd();
 
-		moveCamera(player.getPos(), player.getDir().x, player.getDir().y);
+	}
 
-		DrawGeometry();
+	public void Draw(Gamestate g) {
+		
 		
 
-	
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		gl.glShadeModel(GL2.GL_FLAT);
 
+		gl.glLoadIdentity();
+		gl.glPushMatrix();
 
+		PlayerTank player = (PlayerTank) Gamestate.getInstance().getPlayer();
+
+		moveCamera(player.getPos(), player.getDir().x, player.getDir().y);
+
+		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
+		DrawGeometry(new Vector3f(.1f, .1f, .1f));
+
+		gl.glEnable(GL.GL_POLYGON_OFFSET_FILL);
+		 gl.glPolygonOffset( 1, 1 );
+		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_LINE);
+		DrawGeometry(null);
+
+		gl.glPopMatrix();
+
+		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
 
 	}
 
 	public void resize(int width, int height) {
 
 		gl.glViewport(0, 0, width, height);
-		gl.glMatrixMode(GL.GL_PROJECTION);
+		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 		glu.gluPerspective(60.0f, (float) width / (float) height, znear, zfar);
-		gl.glMatrixMode(GL.GL_MODELVIEW);
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
 
 	}
 

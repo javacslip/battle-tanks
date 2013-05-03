@@ -2,7 +2,6 @@ package battletanks;
 
 import java.awt.*;
 
-
 import java.awt.event.*;
 
 import javax.media.opengl.*;
@@ -14,31 +13,33 @@ import battletanks.game.Gamestate;
 import battletanks.game.INPUT_TYPE;
 import battletanks.game.Logger;
 import battletanks.graphics.Drawer;
+import java.awt.Image;
 
-import com.sun.opengl.util.*;
-import com.sun.opengl.util.j2d.Overlay;
-import com.sun.opengl.util.j2d.TextRenderer;
+import java.awt.Frame;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.media.opengl.*;
+import javax.media.opengl.awt.GLCanvas;
 
+import com.sun.opengl.util.FPSAnimator;
+import com.sun.opengl.util.awt.TextRenderer;
+import com.sun.opengl.util.gl2.GLUT;
 
 import java.nio.ByteBuffer;
 
-
-
-public class TanksMain extends JFrame implements GLEventListener, KeyListener, MouseListener, MouseMotionListener, ActionListener{
+public class TanksMain extends Frame implements GLEventListener, KeyListener,
+		MouseListener, MouseMotionListener, ActionListener {
 
 	// mouse control variables
+	private boolean debugOut = false;
 	private final GLCanvas canvas;
-	private int winW = 512, winH = 512;
-	private int mouseX, mouseY;
-	private int mouseButton;
-	private boolean mouseClick = false;
-	private float tx = 0.0f, ty = 0.0f;
-	private float scale = 1.0f;
-	private float angle = 0.0f;
+	private int winW = 1680, winH = 1050;
+	private Point center = new Point(winW/2, winH/2);;
 	private FPSAnimator animator;
 	Drawer draw;
 	private long time = System.nanoTime();
 	TextRenderer renderer;
+	Robot robot;
 
 	public static void main(String args[]) {
 		new TanksMain();
@@ -52,170 +53,212 @@ public class TanksMain extends JFrame implements GLEventListener, KeyListener, M
 		canvas.addKeyListener(this);
 		canvas.addMouseListener(this);
 		canvas.addMouseMotionListener(this);
-		getContentPane().add(canvas);
+		canvas.setFocusable(true);
+		this.add(canvas);
+
+		setUndecorated(true);
 		setSize(winW, winH);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		Toolkit t=Toolkit.getDefaultToolkit();
+		Image img = new java.awt.image.BufferedImage(1, 1, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+		Cursor pointer= t.createCustomCursor(img, new Point(0,0), "none");
+		
+		setCursor(pointer);
 		setVisible(true);
-		animator = new FPSAnimator(canvas, 30);	// create a 30 fps animator
+		animator = new FPSAnimator(canvas, 30); // create a 30 fps animator
 		animator.start();
 		canvas.requestFocus();
-		
-		
-	}
-	
 
-	
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		
+		
+		Rectangle r=this.getBounds();
+		center = new Point(r.x+r.width/2, r.y+r.height/2);
+		
+		try {
+			robot = new Robot();
+		} catch (AWTException e) {
+			
+			e.printStackTrace();
+		}
+
+	}
+
 	// gl display function
 	public void display(GLAutoDrawable drawable) {
+		Point mousepos = MouseInfo.getPointerInfo().getLocation();
+		
+		int mousex = center.x - mousepos.x;
+		int mousey = center.y - mousepos.y;
+		if(robot!=null)
+		robot.mouseMove(center.x, center.y);
+		Gamestate.getInstance().AddInput(mousex, mousey);
+		Logger.getInstance().debugVal("Mouse:", "<" + mousex +">," + "<" + mousey +">");
 		
 		
-	
 		time = System.currentTimeMillis();
-		
-		Gamestate.getInstance().UpdateState(time);
-		
-		draw.Draw(Gamestate.getInstance());
-		
-		
-		renderer.beginRendering(drawable.getWidth(), drawable.getHeight());
-		Logger.getInstance().display(renderer);
-		renderer.endRendering();
-		
 
+		Gamestate.getInstance().UpdateState(time);
+
+		draw.Draw(Gamestate.getInstance());
+
+		if(debugOut){
+			renderer.beginRendering(drawable.getWidth(), drawable.getHeight());
+			renderer.setColor(1.0f, 0.2f, 0.2f, 1f);
+			Logger.getInstance().display(renderer);
+			renderer.endRendering();
+		}
 
 	}
 
-	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
+	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged,
+			boolean deviceChanged) {
 		// TODO Auto-generated method stub
 	}
 
 	// initialization
 	public void init(GLAutoDrawable drawable) {
-		GL gl = drawable.getGL();
+		GL2 gl = drawable.getGL().getGL2();
 		gl.setSwapInterval(1);
 		GLU glu = new GLU();
 		GLUT glut = new GLUT();
-		renderer = new TextRenderer(new Font("sansserif", Font.BOLD, 22));
+		renderer = new TextRenderer(new Font("Dialog", Font.BOLD, 12));
 		draw = new Drawer(gl, glu, glut);
 		draw.LoadRes();
-		
-		
-		
+
 	}
 
 	// reshape callback function: called when the size of the window changes
-	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+	public void reshape(GLAutoDrawable drawable, int x, int y, int width,
+			int height) {
 		winW = width;
 		winH = height;
 		draw.resize(width, height);
+		Rectangle r=this.getBounds();
+		center = new Point(r.x+r.width/2, r.y+r.height/2);
 	}
 
 	// mouse pressed even callback function
 	public void mousePressed(MouseEvent e) {
-		mouseClick = true;
-		mouseX = e.getX();
-		mouseY = e.getY();
-		mouseButton = e.getButton();
 
 	}
 
 	public void mouseReleased(MouseEvent e) {
-		
-	
+
 	}
 
 	public void mouseDragged(MouseEvent e) {
-		int x = e.getX();
-		int y = e.getY();
-		if (mouseButton == MouseEvent.BUTTON3) {
-			// right button scales
-			scale += (y - mouseY) * 0.01f;
-		}
-		else if (mouseButton == MouseEvent.BUTTON2) {
-			// middle button translates
-			tx += (x - mouseX) * 0.01f;
-			ty -= (y - mouseY) * 0.01f;
-		}
-		else if (mouseButton == MouseEvent.BUTTON1) {
-			// left button rotates
-			angle += (y - mouseY);
-		}
-		mouseX = x;
-		mouseY = y;
-		
+
 	}
+
 	public void keyPressed(KeyEvent e) {
-		switch(e.getKeyCode()) {
+		switch (e.getKeyCode()) {
 		case KeyEvent.VK_ESCAPE:
 		case KeyEvent.VK_Q:
 			System.exit(0);
 			break;
-		case KeyEvent.VK_W:		
-		case KeyEvent.VK_UP:		
-			Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.FORWARD_PRESSED));
+		case KeyEvent.VK_Z:
+			debugOut = !debugOut;
+			
 			break;
-		case KeyEvent.VK_S:		
-		case KeyEvent.VK_DOWN:		
-			Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.BACKWARD_PRESSED));
+			
+		case KeyEvent.VK_W:
+		case KeyEvent.VK_UP:
+			Gamestate.getInstance().AddInput(
+					new GameInput(INPUT_TYPE.FORWARD_PRESSED));
 			break;
-		case KeyEvent.VK_A:		
-		case KeyEvent.VK_LEFT:		
-			Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.LEFT_PRESSED));
+		case KeyEvent.VK_S:
+		case KeyEvent.VK_DOWN:
+			Gamestate.getInstance().AddInput(
+					new GameInput(INPUT_TYPE.BACKWARD_PRESSED));
 			break;
-		case KeyEvent.VK_D:		
-		case KeyEvent.VK_RIGHT:		
-			Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.RIGHT_PRESSED));
+		case KeyEvent.VK_A:
+		case KeyEvent.VK_LEFT:
+			Gamestate.getInstance().AddInput(
+					new GameInput(INPUT_TYPE.LEFT_PRESSED));
 			break;
-		case KeyEvent.VK_SPACE:		
-			Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.FIRE_PRESSED));
+		case KeyEvent.VK_D:
+		case KeyEvent.VK_RIGHT:
+			Gamestate.getInstance().AddInput(
+					new GameInput(INPUT_TYPE.RIGHT_PRESSED));
+			break;
+		case KeyEvent.VK_SPACE:
+			Gamestate.getInstance().AddInput(
+					new GameInput(INPUT_TYPE.FIRE_PRESSED));
 			break;
 		}
-		
+
 	}
-	
-	public void keyReleased(KeyEvent e) {		
-		switch(e.getKeyCode()) {
-			case KeyEvent.VK_ESCAPE:
-			case KeyEvent.VK_Q:
-				System.exit(0);
-			case KeyEvent.VK_W:		
-				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.FORWARD_RELEASED));
-				break;
-			case KeyEvent.VK_UP:		
-				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.FORWARD_RELEASED));
-				break;
-			case KeyEvent.VK_S:		
-				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.BACKWARD_RELEASED));
-				break;
-			case KeyEvent.VK_DOWN:		
-				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.BACKWARD_RELEASED));
-				break;
-			case KeyEvent.VK_A:		
-				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.LEFT_RELEASED));
-				break;
-			case KeyEvent.VK_LEFT:		
-				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.LEFT_RELEASED));
-				break;
-			case KeyEvent.VK_D:		
-				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.RIGHT_RELEASED));
-				break;
-			case KeyEvent.VK_RIGHT:		
-				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.RIGHT_RELEASED));
-				break;
-			case KeyEvent.VK_SPACE:		
-				Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.FIRE_RELEASED));
-				break;
+
+	public void keyReleased(KeyEvent e) {
+		switch (e.getKeyCode()) {
+		case KeyEvent.VK_ESCAPE:
+		case KeyEvent.VK_Q:
+			System.exit(0);
+		case KeyEvent.VK_W:
+			Gamestate.getInstance().AddInput(
+					new GameInput(INPUT_TYPE.FORWARD_RELEASED));
+			break;
+		case KeyEvent.VK_UP:
+			Gamestate.getInstance().AddInput(
+					new GameInput(INPUT_TYPE.FORWARD_RELEASED));
+			break;
+		case KeyEvent.VK_S:
+			Gamestate.getInstance().AddInput(
+					new GameInput(INPUT_TYPE.BACKWARD_RELEASED));
+			break;
+		case KeyEvent.VK_DOWN:
+			Gamestate.getInstance().AddInput(
+					new GameInput(INPUT_TYPE.BACKWARD_RELEASED));
+			break;
+		case KeyEvent.VK_A:
+			Gamestate.getInstance().AddInput(
+					new GameInput(INPUT_TYPE.LEFT_RELEASED));
+			break;
+		case KeyEvent.VK_LEFT:
+			Gamestate.getInstance().AddInput(
+					new GameInput(INPUT_TYPE.LEFT_RELEASED));
+			break;
+		case KeyEvent.VK_D:
+			Gamestate.getInstance().AddInput(
+					new GameInput(INPUT_TYPE.RIGHT_RELEASED));
+			break;
+		case KeyEvent.VK_RIGHT:
+			Gamestate.getInstance().AddInput(
+					new GameInput(INPUT_TYPE.RIGHT_RELEASED));
+			break;
+		case KeyEvent.VK_SPACE:
+			Gamestate.getInstance().AddInput(
+					new GameInput(INPUT_TYPE.FIRE_RELEASED));
+			break;
 		}
 	}
 
 	// these event functions are not used for this assignment
 	// but may be useful in the future
-	public void keyTyped(KeyEvent e) { }
+	public void keyTyped(KeyEvent e) {
+	}
 
-	public void mouseMoved(MouseEvent e) { }
-	public void actionPerformed(ActionEvent e) { }
-	public void mouseClicked(MouseEvent e) { }
-	public void mouseEntered(MouseEvent e) { }
-	public void mouseExited(MouseEvent e) {	}
+	public void mouseMoved(MouseEvent e) {
+		
+	}
+
+	public void actionPerformed(ActionEvent e) {
+	}
+
+	public void mouseClicked(MouseEvent e) {
+	}
+
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	public void mouseExited(MouseEvent e) {
+	}
+
+	@Override
+	public void dispose(GLAutoDrawable arg0) {
+		// TODO Auto-generated method stub
+
+	}
 
 }

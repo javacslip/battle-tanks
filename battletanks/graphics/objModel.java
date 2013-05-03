@@ -8,6 +8,7 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
@@ -21,20 +22,20 @@ class objModel {
 	public int num_verts;		// number of vertices
 	public int num_faces;		// number of triangle faces
 
-	public void Draw(GL gl) {
+	public void Draw(GL2 gl) {
 		vertexBuffer.rewind();
 		normalBuffer.rewind();
 		faceBuffer.rewind();
-		gl.glEnableClientState(GL.GL_VERTEX_ARRAY);
-		gl.glEnableClientState(GL.GL_NORMAL_ARRAY);
+		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+		gl.glEnableClientState(GL2.GL_NORMAL_ARRAY);
 		
 		gl.glVertexPointer(3, GL.GL_FLOAT, 0, vertexBuffer);
 		gl.glNormalPointer(GL.GL_FLOAT, 0, normalBuffer);
 		
-		gl.glDrawElements(GL.GL_TRIANGLES, num_faces*3, GL.GL_UNSIGNED_INT, faceBuffer);
+		gl.glDrawElements(GL.GL_TRIANGLES, num_faces*3, GL2.GL_UNSIGNED_INT, faceBuffer);
 		
-		gl.glDisableClientState(GL.GL_VERTEX_ARRAY);
-		gl.glDisableClientState(GL.GL_NORMAL_ARRAY);
+		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+		gl.glDisableClientState(GL2.GL_NORMAL_ARRAY);
 	}
 	
 	public objModel(String filename) {

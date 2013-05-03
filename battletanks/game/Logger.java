@@ -8,67 +8,79 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.media.opengl.GL;
+import javax.media.opengl.*;
+import javax.media.opengl.awt.GLCanvas;
 
-import com.sun.opengl.util.GLUT;
-import com.sun.opengl.util.j2d.Overlay;
-import com.sun.opengl.util.j2d.TextRenderer;
+import com.sun.opengl.util.awt.TextRenderer;
+import com.sun.opengl.util.gl2.GLUT;
 
 public class Logger {
-	HashMap<String,String> debugValues;
+	HashMap<String, String> debugValues;
 	LinkedList<String> log;
-	
+
 	public static Logger instance = null;
-	
-	public static Logger getInstance(){
+
+	public static Logger getInstance() {
 		if (Logger.instance == null)
 			Logger.instance = new Logger();
-		
+
 		return Logger.instance;
 	}
-	
-	public void Log(String l){
-		log.add(l);
-		System.out.println(l);
+
+	public void Log(String l) {
+		String entry = "<" + Long.toString(System.currentTimeMillis()) + ">";
+		entry += l ;
+		log.add(entry);
+		System.out.println(entry);
 	}
-	
-	public void debugVal(String k, String v){
-			debugValues.put(k, v);
+
+	public void debugVal(String k, String v) {
+		debugValues.put(k, v);
 
 	}
-	
-	
-	public Logger(){
-		debugValues = new HashMap<String,String>();
+
+	public Logger() {
+		debugValues = new HashMap<String, String>();
 		log = new LinkedList<String>();
 	}
-	
 
 	public void display(TextRenderer renderer) {
 
-
 		Iterator it = debugValues.entrySet().iterator();
-		int x = 100;
-		int y = 100;
-		String key,val;
-		
-		 while (it.hasNext()) {
-			
-			 Map.Entry pairs = (Map.Entry)it.next();
-			 key = pairs.getKey().toString() + ":";
-			 val = pairs.getValue().toString();
-			 
-			 renderer.setColor(Color.GREEN);
-			 renderer.draw(key, x,y);
-			 renderer.draw(val,x+100, y);
-			 
-			 y+= 16;
+		int x = 5;
+		int y = 5;
+		String key, val;
 
-		 }
+		while (it.hasNext()) {
 
+			Map.Entry pairs = (Map.Entry) it.next();
+			key = pairs.getKey().toString() + ":";
+			val = pairs.getValue().toString();
 
-	
-		
+			renderer.setColor(Color.GREEN);
+			renderer.draw(key, x, y);
+			renderer.draw(val, x + 100, y);
+
+			y += 15;
+
+		}
+
+		Iterator<String> logit = log.descendingIterator();
+		x = 450;
+		y = 100;
+		String entry;
+
+		while (logit.hasNext() && y > 5) {
+
+			entry = (String) logit.next();
+
+			renderer.setColor(Color.GREEN);
+			renderer.draw(entry, x, y);
+
+			y -= 15;
+
+		}
+
 	}
 
 }
