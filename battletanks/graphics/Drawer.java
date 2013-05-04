@@ -19,6 +19,7 @@ import battletanks.game.objects.PlayerTank;
 public class Drawer {
 
 	private objModel tankmodel;
+	private objModel tankbase;
 
 	GL2 gl;
 	GLU glu;
@@ -47,20 +48,22 @@ public class Drawer {
 
 	public void LoadRes() {
 		tankmodel = new objModel(".\\obj\\tankalt.obj");
+		tankbase = new objModel(".\\obj\\tankbase.obj");
 
 	}
 
-	private void moveCamera(Vector3f pos, float theta, float phi) {
+	private void moveCamera(float theta, float phi) {
 
 		gl.glRotatef(phi, 1.0f, 0, 0f);
 		gl.glRotatef(theta, 0, 1.0f, 0);
-		gl.glTranslatef(pos.x, pos.y, pos.z);
+		
+		
 
 	}
 
 	private void DrawGeometry(Vector3f color) {
 		gl.glPushMatrix();
-		gl.glLineWidth(3);
+		gl.glLineWidth(1.5f);
 
 		if (color == null)
 			gl.glColor3f(0.5F, 0.5F, .5F);
@@ -105,6 +108,25 @@ public class Drawer {
 		gl.glPopMatrix();
 
 	}
+	
+	private void drawPlayerTank(float rot){
+		gl.glPushMatrix();
+		gl.glColor3f(.1f, .1f, .1f);
+		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
+		gl.glRotatef(-rot-90, 0f, 1, 0f);
+		gl.glTranslatef(0f,-.185f,0f);
+		
+		
+		tankbase.Draw(gl);
+		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_LINE);
+		gl.glColor3f(.1f, 1f, .1f);
+		tankbase.Draw(gl);
+		gl.glPopMatrix();
+	}
+	
+	public void DrawUI(){
+		
+	}
 
 	public void Draw(Gamestate g) {
 		
@@ -115,12 +137,21 @@ public class Drawer {
 
 		gl.glLoadIdentity();
 		gl.glPushMatrix();
-		DrawBackground();
-
+		
+		
 		PlayerTank player = (PlayerTank) Gamestate.getInstance().getPlayer();
-
-		moveCamera(player.getPos(), player.getDir().x, player.getDir().y);
-
+		
+		
+		DrawUI();
+		
+		
+		moveCamera(player.getLookdirx(), player.getLookdiry());
+		DrawBackground();
+		drawPlayerTank(player.getDir().x);
+		
+		Vector3f pos = player.getPos();
+		gl.glTranslatef(pos.x, pos.y, pos.z);
+		
 		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
 		DrawGeometry(new Vector3f(.1f, .1f, .1f));
 
@@ -140,7 +171,7 @@ public class Drawer {
 		gl.glViewport(0, 0, width, height);
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
-		glu.gluPerspective(40.0f, (float) width / (float) height, znear, zfar);
+		glu.gluPerspective(45.0f, (float) width / (float) height, znear, zfar);
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 
 	}

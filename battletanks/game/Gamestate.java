@@ -91,12 +91,16 @@ public class Gamestate {
 	}
 	
 	private void processInput(){
+		player.setLookImpulse(mousex,mousey);
+
+		
 		INPUT_TYPE input;
 		for (GameInput o : playerInput) {
 			Logger.getInstance().debugVal("LastKey" , o.getInputType().name());
 			Logger.getInstance().Log("LastKey:" + o.getInputType().name());
 			input = o.getInputType();
 			switch (input) {
+			
 			
 			case FORWARD_PRESSED:
 				player.moveForward();

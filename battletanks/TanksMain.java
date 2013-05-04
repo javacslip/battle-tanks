@@ -70,9 +70,11 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 		animator.start();
 		canvas.requestFocus();
 
-		GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
-
-		ge.getDefaultScreenDevice().setFullScreenWindow(this);
+		if(fullscreen == true){
+			GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
+	
+			ge.getDefaultScreenDevice().setFullScreenWindow(this);
+		}
 		
 		
 		//this.setExtendedState(JFrame.MAXIMIZED_BOTH);

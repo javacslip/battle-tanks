@@ -66,8 +66,8 @@ public class Logger {
 		}
 
 		Iterator<String> logit = log.descendingIterator();
-		x = 450;
-		y = 100;
+		x = 500;
+		y = 150;
 		String entry;
 
 		while (logit.hasNext() && y > 5) {

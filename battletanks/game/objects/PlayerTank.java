@@ -4,6 +4,8 @@ import javax.vecmath.Vector2d;
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
+import battletanks.game.Logger;
+
 
 public class PlayerTank extends PhysObject {
 
@@ -13,10 +15,17 @@ public class PlayerTank extends PhysObject {
 	private boolean isMovingBackward = false;
 	private boolean isTurningLeft = false;
 	private boolean isTurningRight = false;
+
+
+	float lookdirx = -90f;
+	float lookdiry = 0f;
 	
 	public PlayerTank(){
+
 		super();
-	
+		
+		lookdirx = -90f;
+		lookdiry = 0f;
 		
 	}
 	
@@ -39,10 +48,38 @@ public class PlayerTank extends PhysObject {
 			this.setAccel(new Vector3f(0,0,0));
 		}
 		
-		
+		Vector2f dir = new Vector2f(this.getDir());
 		super.update(dtime);
+		Vector2f dir2 = new Vector2f(this.getDir());
+		dir2.sub(dir);
+		lookdirx += dir2.x;
+		lookdiry += dir2.y;
+		Logger.getInstance().debugVal("Look","<" + lookdirx + ">," + "<" + lookdiry + ">");
 		
 		
+	}
+	
+	public float getLookdirx() {
+		return lookdirx;
+	}
+
+	public void setLookdirx(float lookdirx) {
+		
+		this.lookdirx = lookdirx;
+		this.lookdirx = this.lookdirx % 360.0f;
+	}
+
+	public float getLookdiry() {
+		return lookdiry;
+	}
+
+	public void setLookdiry(float lookdiry) {
+		this.lookdiry = lookdiry;
+		this.lookdiry = this.lookdiry % 360.0f;
+		if(this.lookdiry > 25.0f)
+			this.lookdiry = 25.0f;
+		if(this.lookdiry < -25.0f)
+			this.lookdiry = -25.0f;
 	}
 	
 	
@@ -92,6 +129,7 @@ public class PlayerTank extends PhysObject {
 		
 		Vector2f rot = this.getDirAccel();
 		this.setDirAccel(rot.x -rotRate, rot.y);
+		
 		}
 	}
 	
@@ -103,6 +141,7 @@ public class PlayerTank extends PhysObject {
 		
 		Vector2f rot = this.getDirAccel();
 		this.setDirAccel(rot.x +rotRate, rot.y);
+	
 		}
 	}
 	
@@ -124,6 +163,11 @@ public class PlayerTank extends PhysObject {
 	
 	public void stopRight(){
 		isTurningRight = false;
+		
+	}
+
+	public void setLookImpulse(int mousex, int mousey) {
+		
 		
 	}
 	
