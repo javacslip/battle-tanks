@@ -14,12 +14,13 @@ import com.sun.opengl.util.gl2.GLUT;
 import battletanks.game.Gamestate;
 import battletanks.game.Logger;
 import battletanks.game.objects.GameObject;
-import battletanks.game.objects.PlayerTank;
+import battletanks.game.objects.Part;
+import battletanks.game.objects.Tank;
 
 public class Drawer {
 
-	private objModel tankmodel;
-	private objModel tankbase;
+	private Model tankmodel;
+	private Model tankbase;
 
 	GL2 gl;
 	GLU glu;
@@ -47,8 +48,7 @@ public class Drawer {
 	}
 
 	public void LoadRes() {
-		tankmodel = new objModel(".\\obj\\tankalt.obj");
-		tankbase = new objModel(".\\obj\\tankbase.obj");
+		MODELS.LoadModels();
 
 	}
 
@@ -56,8 +56,6 @@ public class Drawer {
 
 		gl.glRotatef(phi, 1.0f, 0, 0f);
 		gl.glRotatef(theta, 0, 1.0f, 0);
-		
-		
 
 	}
 
@@ -71,25 +69,29 @@ public class Drawer {
 			gl.glColor3f(color.x, color.y, color.z);
 		for (GameObject ob : Gamestate.getInstance().getObstacles()) {
 			gl.glPushMatrix();
-			gl.glTranslatef(ob.getPos().x, ob.getPos().y, ob.getPos().z);
-			gl.glRotatef(ob.getDir().x, 1.0f, 0, 0f);
-			gl.glRotatef(ob.getDir().y, 0, 1.0f, 0);
+			gl.glTranslatef(ob.getBase().getPos().x, ob.getBase().getPos().y,
+					ob.getBase().getPos().z);
+			gl.glRotatef(ob.getBase().getDir().x, 1.0f, 0, 0f);
+			gl.glRotatef(ob.getBase().getDir().y, 0, 1.0f, 0);
 			glut.glutSolidCube(1);
 			gl.glPopMatrix();
 		}
-		
+
 		if (color == null)
 			gl.glColor3f(0.9F, 0.0F, .0F);
 		else
 			gl.glColor3f(color.x, color.y, color.z);
 
-		for (GameObject ob : Gamestate.getInstance().getEnemies()) {
-			gl.glPushMatrix();
-			gl.glTranslatef(ob.getPos().x, ob.getPos().y, ob.getPos().z);
-			gl.glRotatef(ob.getDir().x, 1.0f, 0, 0f);
-			gl.glRotatef(ob.getDir().y, 0, 1.0f, 0);
-			tankmodel.Draw(gl);
-			gl.glPopMatrix();
+		for (GameObject ob : Gamestate.getInstance().getTanks()) {
+			for (Part p : ob.getParts()) {
+				gl.glPushMatrix();
+				gl.glTranslatef(p.getPos().x, p.getPos().y, p.getPos().z);
+				gl.glRotatef(p.getDir().x, 0, 1.0f, 0f);
+				gl.glRotatef(p.getDir().y, 1.0f,0 , 0);
+				gl.glTranslatef(p.getCenterrot().x, p.getCenterrot().y, p.getCenterrot().z);
+				p.getModel().Draw(gl);
+				gl.glPopMatrix();
+			}
 		}
 
 		gl.glPopMatrix();
@@ -108,61 +110,58 @@ public class Drawer {
 		gl.glPopMatrix();
 
 	}
-	
-	private void drawPlayerTank(float rot){
+
+	private void drawPlayerTank(float rot) {
 		gl.glPushMatrix();
 		gl.glColor3f(.1f, .1f, .1f);
 		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
-		gl.glRotatef(-rot-90, 0f, 1, 0f);
-		gl.glTranslatef(0f,-.185f,0f);
-		
-		
-		tankbase.Draw(gl);
+		gl.glRotatef(-rot - 90, 0f, 1, 0f);
+		gl.glTranslatef(0f, -.185f, 0f);
+
+		MODELS.TANKBASE.Draw(gl);
 		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_LINE);
 		gl.glColor3f(.1f, 1f, .1f);
-		tankbase.Draw(gl);
+		MODELS.TANKBASE.Draw(gl);
 		gl.glPopMatrix();
 	}
-	
-	public void DrawUI(){
-		
+
+	public void DrawUI() {
+
 	}
 
 	public void Draw(Gamestate g) {
-		
-		
 
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		gl.glShadeModel(GL2.GL_FLAT);
 
 		gl.glLoadIdentity();
 		gl.glPushMatrix();
-		
-		
-		PlayerTank player = (PlayerTank) Gamestate.getInstance().getPlayer();
-		
-		
-		DrawUI();
-		
-		
-		moveCamera(player.getLookdirx(), player.getLookdiry());
+
+		Tank player = (Tank) Gamestate.getInstance().getPlayer();
+
+		Logger.getInstance().Log("drawDir:<" + player.getLookDir().x + ">");
+		moveCamera(player.getLookDir().x, player.getLookDir().y);
+
 		DrawBackground();
-		drawPlayerTank(player.getDir().x);
-		
-		Vector3f pos = player.getPos();
+
+		drawPlayerTank(player.getBase().getDir().x);
+
+		Vector3f pos = player.getBase().getPos();
 		gl.glTranslatef(pos.x, pos.y, pos.z);
-		
+
 		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
 		DrawGeometry(new Vector3f(.1f, .1f, .1f));
 
 		gl.glEnable(GL.GL_POLYGON_OFFSET_FILL);
-		 gl.glPolygonOffset( 1, 1 );
+		gl.glPolygonOffset(1, 1);
 		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_LINE);
 		DrawGeometry(null);
 
 		gl.glPopMatrix();
 
 		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
+
+		DrawUI();
 
 	}
 

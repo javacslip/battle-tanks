@@ -5,7 +5,7 @@ import javax.vecmath.Vector3f;
 
 import battletanks.game.Logger;
 
-public abstract class PhysObject implements GameObject {
+public class PhysObject {
 
 	private Vector3f accel;
 	private Vector3f velocity;
@@ -14,6 +14,7 @@ public abstract class PhysObject implements GameObject {
 	private Vector2f rot;
 	private Vector2f rotspeed;
 	private Vector2f rotaccel;
+
 
 
 	private float dragconst;
@@ -32,6 +33,7 @@ public abstract class PhysObject implements GameObject {
 		rot = new Vector2f(0, 0);
 		rotspeed = new Vector2f(0, 0);
 		rotaccel = new Vector2f(0, 0);
+		
 
 		maxrotaccel = 1f;
 		maxrotvel = 2.5f;
@@ -43,6 +45,8 @@ public abstract class PhysObject implements GameObject {
 
 	}
 	
+
+
 	public float getDragconst() {
 		return dragconst;
 	}
@@ -85,12 +89,7 @@ public abstract class PhysObject implements GameObject {
 
 	public void update(long dtime) {
 		
-		Logger.getInstance().debugVal("Pos", position.toString());
-		Logger.getInstance().debugVal("Vel", velocity.toString());
-		Logger.getInstance().debugVal("Accel", accel.toString());
-		Logger.getInstance().debugVal("rot", rot.toString());
-		Logger.getInstance().debugVal("rotspeed", rotspeed.toString());
-		Logger.getInstance().debugVal("rotaccel", rotaccel.toString());
+		
 		
 		accel = clamp(accel, maxaccel);
 		velocity = clamp(velocity, maxvel);
@@ -129,6 +128,8 @@ public abstract class PhysObject implements GameObject {
 		tmpr.scale(dtime);
 		rot.add(rotspeed);
 		
+		this.setAccel(0,0,0);
+		this.setDirAccel(0,0);
 
 	}
 	
@@ -221,10 +222,12 @@ public abstract class PhysObject implements GameObject {
 
 	public void setDir(float x, float y) {
 		rot = new Vector2f(x, y);
+		setDir(rot);
 	}
 
 	public void setDir(Vector2f rot) {
-
+		rot.x = rot.x % 360.0f;
+		rot.y = rot.y % 360.0f;
 		this.rot = rot;
 	}
 

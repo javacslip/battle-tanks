@@ -100,7 +100,8 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 		int mousey = center.y - mousepos.y;
 		if(robot!=null)
 		robot.mouseMove(center.x, center.y);
-		Gamestate.getInstance().AddInput(mousex, mousey);
+		Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.VIEWX, mousex));
+		Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.VIEWY, mousey));
 		Logger.getInstance().debugVal("Mouse:", "<" + mousex +">," + "<" + mousey +">");
 		
 		

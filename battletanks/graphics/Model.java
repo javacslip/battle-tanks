@@ -14,7 +14,7 @@ import javax.vecmath.Vector3f;
 
 import com.sun.opengl.util.BufferUtil;
 
-class objModel {
+public class Model {
 	public FloatBuffer vertexBuffer;
 	public IntBuffer faceBuffer;
 	public FloatBuffer normalBuffer;
@@ -31,6 +31,7 @@ class objModel {
 
 
 	public void Draw(GL2 gl) {
+		
 		vertexBuffer.rewind();
 		normalBuffer.rewind();
 		faceBuffer.rewind();
@@ -63,7 +64,7 @@ class objModel {
 		gl.glDisableClientState(GL2.GL_NORMAL_ARRAY);
 	}
 
-	public objModel(String filename) {
+	public Model(String filename) {
 		/* load a triangular mesh model from a .obj file */
 		BufferedReader in = null;
 		try {
@@ -152,7 +153,7 @@ class objModel {
 		bby = maxy - miny;
 		bbz = maxz - minz;
 		float bbmax = Math.max(bbx, Math.max(bby, bbz));
-
+		bbmax = 6;
 		for (Point3f p : input_verts) {
 
 			p.x = (p.x - center.x) / bbmax;

@@ -4,31 +4,34 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import battletanks.game.objects.EnemyTank;
+
+import battletanks.game.objects.EnemyTankController;
 import battletanks.game.objects.GameObject;
 import battletanks.game.objects.Obstacle;
-import battletanks.game.objects.PlayerTank;
+import battletanks.game.objects.PlayerTankController;
+import battletanks.game.objects.Tank;
 
 
 public class Gamestate {
 	
 	private List<GameObject> obstacles;
-	private List<GameObject> enemies;
+	private List<GameObject> tanks;
 	private List<GameObject> bullets;
 	
-	private PlayerTank player;
+	private GameObject player;
+	
 	private List<GameInput> playerInput;
-	int mousex = 0;
-	int mousey = 0;
+
 	
 	long lasttime;
 	
 	private Gamestate(){
 		lasttime = System.currentTimeMillis();
 		obstacles = new ArrayList<GameObject>();
-		enemies = new ArrayList<GameObject>();
+		tanks = new ArrayList<GameObject>();
 		bullets = new ArrayList<GameObject>();
-		player = new PlayerTank();
+		player = new Tank();
+		player.setController(new PlayerTankController((Tank) player));
 		playerInput = new ArrayList<GameInput>();
 		setUpMap();
 	}
@@ -37,8 +40,8 @@ public class Gamestate {
 		if(o instanceof Obstacle){
 			obstacles.add(o);
 		}
-		else if(o instanceof EnemyTank){
-			enemies.add(o);
+		else if(o instanceof Tank){
+			tanks.add(o);
 		}
 		else{
 			bullets.add(o);
@@ -50,8 +53,8 @@ public class Gamestate {
 		if(o instanceof Obstacle){
 			obstacles.remove(obstacles.indexOf(o));
 		}
-		else if(o instanceof EnemyTank){
-			enemies.remove(enemies.indexOf(o));
+		else if(o instanceof Tank){
+			tanks.remove(tanks.indexOf(o));
 		}
 		else{
 			bullets.remove(bullets.indexOf(o));
@@ -67,8 +70,8 @@ public class Gamestate {
 		
 	}
 	
-	public List<GameObject> getEnemies(){
-		return enemies;
+	public List<GameObject> getTanks(){
+		return tanks;
 		
 	}
 	
@@ -85,55 +88,11 @@ public class Gamestate {
 	public void AddInput(GameInput o){
 		playerInput.add(o);
 	}
-	public void AddInput(int x, int y){
-		mousex = x;
-		mousey = y;
-	}
-	
-	private void processInput(){
-		player.setLookImpulse(mousex,mousey);
 
-		
-		INPUT_TYPE input;
-		for (GameInput o : playerInput) {
-			Logger.getInstance().debugVal("LastKey" , o.getInputType().name());
-			Logger.getInstance().Log("LastKey:" + o.getInputType().name());
-			input = o.getInputType();
-			switch (input) {
-			
-			
-			case FORWARD_PRESSED:
-				player.moveForward();
-				break;
-			case BACKWARD_PRESSED:
-				player.moveBackward();
-				break;
-			case LEFT_PRESSED:
-				player.turnLeft();
-				break;
-			case RIGHT_PRESSED:
-				player.turnRight();
-				break;
-			case FIRE_PRESSED:
-				break;
-			case FORWARD_RELEASED:
-				player.stopForwards();
-				break;
-			case BACKWARD_RELEASED:
-				player.stopBackwards();
-				break;
-			case LEFT_RELEASED:
-				player.stopLeft();
-				break;
-			case RIGHT_RELEASED:
-				player.stopRight();
-				break;
-			case FIRE_RELEASED:
-				//player stop
-				break;
-			}
-		}
-		playerInput.clear();
+	
+	public List<GameInput> getPlayerInput(){
+		return playerInput;
+
 	}
 	
 	public void UpdateState(long dtime) {
@@ -144,10 +103,10 @@ public class Gamestate {
 			deltaTime = 500;
 		}
 		
-		processInput();
+
 		
-		for(GameObject go : enemies){
-			//go.update(deltaTime);
+		for(GameObject go : tanks){
+			go.update(deltaTime);
 		}
 		
 		player.update(deltaTime);
@@ -158,25 +117,26 @@ public class Gamestate {
 	public void setUpMap(){
 		
 		Obstacle ob;
-		EnemyTank et;
+		Tank et;
 		Random rf = new Random(System.nanoTime());
 		// obstacles
 		for(int i = 0; i < 30; i++){
 			ob = new Obstacle();
-			ob.setPos(rf.nextFloat() * 20 - 10, .25f, rf.nextFloat() * 20 - 10);
-			ob.setDir(0, rf.nextFloat() * 180);
+			ob.getBase().getPhys().setPos(rf.nextFloat() * 20 - 10, .25f, rf.nextFloat() * 20 - 10);
+			ob.getBase().getPhys().setDir(0, rf.nextFloat() * 180);
 			addObject(ob);
 		}
 		// enemy tanks
 		for(int i = 0; i < 5; i++){
-			et = new EnemyTank();
-			et.setPos(rf.nextFloat() * 20 - 10, 0, rf.nextFloat() * 20 - 10);
-			et.setDir(0, rf.nextFloat() * 180);
+			et = new Tank();
+			et.setController(new EnemyTankController(et));
+			et.getBase().getPhys().setPos(rf.nextFloat() * 20 - 10, -.16f, rf.nextFloat() * 20 - 10);
+			et.getBase().getPhys().setDir(0,0);
 			addObject(et);
 		}
 		// player
-		player.setPos(0, 0, 0);
-		player.setDir(0, 0);
+		player.getBase().getPhys().setPos(0, 0, 0);
+		player.getBase().getPhys().setDir(0, 0);
 		
 	}
 	
