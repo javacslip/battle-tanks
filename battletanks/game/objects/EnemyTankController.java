@@ -1,6 +1,7 @@
 package battletanks.game.objects;
 
 import javax.vecmath.Vector2f;
+import javax.vecmath.Vector3f;
 
 import battletanks.game.Logger;
 
@@ -13,6 +14,7 @@ public class EnemyTankController implements Controller {
 	private Vector2f movetarget; 
 	private Vector2f firetarget; 
 	private Vector2f pos; 
+	private Vector2f dir; 
 	
 	public EnemyTankController(Tank c){
 		controlled = c;
@@ -25,12 +27,14 @@ public class EnemyTankController implements Controller {
 	
 	public void update(long dtime) {
 		//controlled.turnLeft();
+		
 		count++;
-		//pos = controlled.getBase().getPos();
+		pos = new Vector2f(controlled.getBase().getPos().x, controlled.getBase().getPos().z);
+		float dir = controlled.getBase().getPhys().getDir().x;
 		double rand = Math.random();
-		if(((double)(count - lastaction)/5000)-0.1d > rand ){
+		if(((double)(count - lastaction)/1000)-0.1d > rand ){
 			rand = Math.random();
-			if(rand > 0.5d){
+			if(rand > 0.0d){
 				movetarget = new Vector2f((float)Math.random() * 100f,  (float)Math.random() * 100f);
 				Logger.getInstance().Log("New Move Action:" + movetarget);
 				lastaction = count;
@@ -39,7 +43,40 @@ public class EnemyTankController implements Controller {
 				firetarget = new Vector2f((float)Math.random() * 100f,  (float)Math.random() * 100f);
 				Logger.getInstance().Log("New Fire Action:" + firetarget);
 				lastaction = count;
+				movetarget = null;
 			}
+			
+		}
+		
+		if(movetarget != null){
+			Vector2f tmp = new Vector2f(pos);
+			tmp.sub(movetarget);
+			float dist = tmp.length();
+			
+			 
+			float angle = (float) Math.toDegrees(Math.atan2(pos.y-movetarget.y, pos.x-movetarget.x));
+			
+			
+			//Logger.getInstance().Log("dir:" + (angle - dir));
+			if( angle-dir < -2.5f ){
+				controlled.turnLeft();
+				Logger.getInstance().Log("left");
+				controlled.moveForward();
+			}
+			else if( angle-dir > 2.5f){
+				controlled.turnRight();
+				Logger.getInstance().Log("right");
+				controlled.moveForward();
+			}
+			else if (dist > 2){
+				controlled.moveForward();
+			}
+			else{
+				movetarget = new Vector2f((float)Math.random() * 100f,  (float)Math.random() * 100f);
+				Logger.getInstance().Log("New Move Action:" + movetarget);
+				lastaction = count;
+			}
+			
 			
 		}
 		

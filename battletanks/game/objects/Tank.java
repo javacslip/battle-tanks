@@ -35,7 +35,7 @@ public class Tank extends GameObjectImp {
 		parts.add(turret);
 
 		base.getPhys().setMaxvel(.5f);
-		turret.getPhys().setPos(new Vector3f(0.05f, 0.173f, 0f));
+		turret.getPhys().setPos(new Vector3f(0.00f, 0.173f, 0f));
 		turret.setCenterrot(new Vector3f(-0.1f, 0, 0f));
 		base.getPhys().setDragconst(.005f);
 

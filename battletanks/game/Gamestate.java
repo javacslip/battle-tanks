@@ -216,7 +216,7 @@ public class Gamestate {
 			ob.getBase().getPhys().setPos(rf.nextFloat() * 20 - 10, .35f, rf.nextFloat() * 20 - 10);
 			ob.getBase().getPhys().setDir(0, rf.nextFloat() * 180);
 			ob.getBase().getPhys().setRadius(.8f);
-			addObject(ob);
+			//addObject(ob);
 		}
 		// enemy tanks
 		for(int i = 0; i < 1; i++){
