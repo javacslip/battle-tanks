@@ -1,6 +1,7 @@
 package battletanks.graphics;
 
 import java.util.Iterator;
+import java.awt.Point;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
@@ -14,6 +15,7 @@ import javax.media.opengl.awt.GLCanvas;
 import com.sun.opengl.util.awt.TextRenderer;
 import com.sun.opengl.util.gl2.GLUT;
 
+import battletanks.TanksMain;
 import battletanks.game.Gamestate;
 import battletanks.game.Logger;
 import battletanks.game.objects.Bullet;
@@ -30,12 +32,15 @@ public class Drawer {
 	GLU glu;
 	GLUT glut;
 	private float znear, zfar;
+	private int width, height;
 
 	public Drawer(GL2 gl2, GLU glu, GLUT glut) {
 
 		this.gl = gl2;
 		this.glu = glu;
 		this.glut = glut;
+		width = 1440;
+		height = 900;
 
 		znear = 0.01f;
 		zfar = 1000.f;
@@ -154,7 +159,40 @@ public class Drawer {
 	}
 
 	public void DrawUI() {
+		
+		// aiming reticle defining vertices
+		Point center = new Point(width/2, height/2);
+		float lx = (float)center.x - 100.f;
+		float lh = (float)center.y - 50.f;
+		float rx = (float)center.x + 100.f;
+		float rh = (float)center.y + 50.f;
+		
+		// set up 2d drawing
+		gl.glMatrixMode(gl.GL_PROJECTION);
+		gl.glLoadIdentity();
+		glu.gluOrtho2D(0.0, width, height, 0.0);
+	    gl.glMatrixMode(gl.GL_MODELVIEW);
+	    gl.glLoadIdentity();
+	    gl.glTranslatef(0.375f, 0.375f, 0.0f);
+	    gl.glDisable(gl.GL_DEPTH_TEST);
 
+	    // draw HUD
+		gl.glBegin(gl.GL_LINE_LOOP);
+		gl.glColor3f(1, 0, 0);
+		gl.glVertex2d(lx, lh);
+		gl.glVertex2d(rx, lh);
+		gl.glVertex2d(rx, rh);
+		gl.glVertex2d(lx, rh);
+		gl.glEnd();
+	    
+		// set up 3d drawing
+	    gl.glViewport(0, 0, width, height);
+		gl.glMatrixMode(GL2.GL_PROJECTION);
+		gl.glLoadIdentity();
+		glu.gluPerspective(45.0f, (float) width / (float) height, znear, zfar);
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
+	    gl.glEnable(gl.GL_DEPTH_TEST);
+		
 	}
 
 	public void Draw(Gamestate g) {
@@ -193,7 +231,8 @@ public class Drawer {
 	}
 
 	public void resize(int width, int height) {
-		
+		this.width = width;
+		this.height = height;
 		gl.glViewport(0, 0, width, height);
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
