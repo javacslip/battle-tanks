@@ -10,10 +10,10 @@ public class PhysObject {
 	private Vector3f accel;
 	private Vector3f velocity;
 	private Vector3f position;
-	private Vector2f bbox;
 	private Vector2f rot;
 	private Vector2f rotspeed;
 	private Vector2f rotaccel;
+	private float radius;
 
 
 
@@ -28,7 +28,7 @@ public class PhysObject {
 		position = new Vector3f(0, 0, 0);
 		velocity = new Vector3f(0, 0, 0);
 		accel = new Vector3f(0, 0, 0);
-		bbox = new Vector2f(1, 1);
+		radius = 0.0f;
 
 		rot = new Vector2f(0, 0);
 		rotspeed = new Vector2f(0, 0);
@@ -179,10 +179,6 @@ public class PhysObject {
 		return this.accel;
 	}
 
-	public Vector2f getBoundingBox() {
-		return bbox;
-	}
-
 	public void setPos(float x, float y, float z) {
 		position = new Vector3f(x, y, z);
 
@@ -210,9 +206,14 @@ public class PhysObject {
 		accel = v;
 	}
 
-	public void setBoundingBox(Vector2f v) {
-		this.bbox = v;
 
+	// bounding sphere
+	public float getRadius() {
+		return radius;
+	}
+	
+	public void setRadius(float r) {
+		radius = r;
 	}
 
 	// dir

@@ -82,7 +82,7 @@ public class Drawer {
 					ob.getBase().getPos().z);
 			gl.glRotatef(ob.getBase().getDir().x, 1.0f, 0, 0f);
 			gl.glRotatef(ob.getBase().getDir().y, 0, 1.0f, 0);
-			//glut.glutSolidCube(1);
+			glut.glutSolidCube(1);
 			gl.glPopMatrix();
 		}
 

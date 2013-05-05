@@ -7,6 +7,7 @@ import javax.vecmath.Vector2d;
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
+import battletanks.game.CollisionResult;
 import battletanks.game.Gamestate;
 import battletanks.game.Logger;
 import battletanks.graphics.MODELS;
@@ -128,6 +129,15 @@ public class Tank extends GameObjectImp {
 
 		turret.getPhys().setDirAccel(-((float) x) / turretRate,
 				-((float) y) / turretRate);
+	}
+
+	@Override
+	public void doCollision(CollisionResult c) {
+		Vector3f tank = new Vector3f(this.base.getPos());
+		tank.sub(c.overlap);
+		tank.y = 0;
+		this.base.getPhys().setPos(tank);
+		
 	}
 
 }

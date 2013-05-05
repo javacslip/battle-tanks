@@ -9,6 +9,7 @@ import javax.vecmath.Vector2d;
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
+import battletanks.game.CollisionResult;
 import battletanks.game.Gamestate;
 import battletanks.game.Logger;
 import battletanks.graphics.MODELS;
@@ -91,6 +92,12 @@ public class Bullet extends GameObjectImp {
 		oldPos.add(new Vector3f(this.base.getPhys().getPos()));
 		oldDir.add(new Vector2f(this.base.getPhys().getDir()));
 
+	}
+
+	@Override
+	public void doCollision(CollisionResult c) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
