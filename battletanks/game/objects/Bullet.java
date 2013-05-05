@@ -16,8 +16,8 @@ import battletanks.graphics.MODELS;
 
 public class Bullet extends GameObjectImp {
 
-	private float bulletSpeed = 1f;
-	private Vector3f gravity = new Vector3f(0, -.005f, 0);
+	private float bulletSpeed = 1.2f;
+	private Vector3f gravity = new Vector3f(0, -.0005f, 0);
 
 	private LinkedList<Vector3f> oldPos;
 	private LinkedList<Vector2f> oldDir;
