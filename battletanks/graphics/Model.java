@@ -22,7 +22,9 @@ public class Model {
 	public int num_verts; // number of vertices
 	public int num_faces; // number of triangle faces
 	
-	
+	public float rotx = 0;
+	public float roty = 0;
+	private float scale = 6;
 	public FloatBuffer qvertexBuffer;
 	public IntBuffer qfaceBuffer;
 	public FloatBuffer qnormalBuffer;
@@ -31,6 +33,9 @@ public class Model {
 
 
 	public void Draw(GL2 gl) {
+		
+		gl.glRotatef(rotx, 0, 1, 0);
+		gl.glRotatef(roty, 1, 0, 0);
 		
 		vertexBuffer.rewind();
 		normalBuffer.rewind();
@@ -64,7 +69,7 @@ public class Model {
 		gl.glDisableClientState(GL2.GL_NORMAL_ARRAY);
 	}
 
-	public Model(String filename) {
+	public Model(String filename,float rotx,float roty,float scale) {
 		/* load a triangular mesh model from a .obj file */
 		BufferedReader in = null;
 		try {
@@ -153,7 +158,7 @@ public class Model {
 		bby = maxy - miny;
 		bbz = maxz - minz;
 		float bbmax = Math.max(bbx, Math.max(bby, bbz));
-		bbmax = 6;
+		bbmax = scale;
 		for (Point3f p : input_verts) {
 
 			p.x = (p.x - center.x) / bbmax;

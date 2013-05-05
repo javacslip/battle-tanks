@@ -202,6 +202,8 @@ public class Gamestate {
 		
 
 	}
+	
+	
 
 	public void setUpMap(){
 		
@@ -226,7 +228,7 @@ public class Gamestate {
 			addObject(et);
 		}
 		// player
-		player.getBase().getPhys().setPos(0, 0, 0);
+		player.getBase().getPhys().setPos(0, -.16f, 0);
 		player.getBase().getPhys().setDir(0, 0);
 		player.getBase().getPhys().setRadius(.65f);
 		

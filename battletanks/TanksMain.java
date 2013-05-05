@@ -75,9 +75,11 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 	
 			ge.getDefaultScreenDevice().setFullScreenWindow(this);
 		}
-		
+		else{
+			
 		
 		//this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		}
 		
 		
 		Rectangle r=this.getBounds();
@@ -149,10 +151,19 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 
 	// mouse pressed even callback function
 	public void mousePressed(MouseEvent e) {
+		if(e.getButton() == e.BUTTON1){
+			Gamestate.getInstance().AddInput(
+					new GameInput(INPUT_TYPE.FIRE_PRESSED));
+		}
+	
 
 	}
 
 	public void mouseReleased(MouseEvent e) {
+		if(e.getButton() == e.BUTTON1){
+			Gamestate.getInstance().AddInput(
+					new GameInput(INPUT_TYPE.FIRE_RELEASED));
+		}
 
 	}
 

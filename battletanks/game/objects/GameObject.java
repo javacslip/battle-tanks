@@ -17,5 +17,6 @@ public interface GameObject {
 	void setController(Controller c);
 	public void doCollision(CollisionResult c);
 	
+	
 
 }

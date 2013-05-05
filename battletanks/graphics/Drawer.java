@@ -80,11 +80,12 @@ public class Drawer {
 			gl.glPushMatrix();
 			gl.glTranslatef(ob.getBase().getPos().x, ob.getBase().getPos().y,
 					ob.getBase().getPos().z);
-			gl.glRotatef(ob.getBase().getDir().x, 1.0f, 0, 0f);
-			gl.glRotatef(ob.getBase().getDir().y, 0, 1.0f, 0);
+			gl.glRotatef(-ob.getBase().getDir().y, 0, 1.0f, 0);
+			gl.glRotatef(-ob.getBase().getDir().x, 1.0f, 0, 0f);
 			glut.glutSolidCube(1);
 			gl.glPopMatrix();
 		}
+		
 
 		if (color == null)
 			gl.glColor3f(0.9F, 0.0F, .0F);
@@ -95,10 +96,14 @@ public class Drawer {
 			for (Part p : ob.getParts()) {
 				gl.glPushMatrix();
 				gl.glTranslatef(p.getPos().x, p.getPos().y, p.getPos().z);
-				gl.glRotatef(p.getDir().x, 0, 1.0f, 0f);
-				gl.glRotatef(p.getDir().y, 1.0f,0 , 0);
+				gl.glRotatef(270, 0, 1, 0f);
+				gl.glRotatef(-p.getDir().x, 0, 1.0f, 0f);
+				gl.glRotatef(p.getDir().y, 0.0f,0 , 1);
+
 				gl.glTranslatef(p.getCenterrot().x, p.getCenterrot().y, p.getCenterrot().z);
+				
 				p.getModel().Draw(gl);
+				//glut.glutSolidSphere(.65,20,20);
 				gl.glPopMatrix();
 			}
 		}
@@ -120,8 +125,13 @@ public class Drawer {
 				Vector2f d = id.next();
 				gl.glPushMatrix();
 				gl.glTranslatef(p.x, p.y, p.z);
+				
+				gl.glRotatef(270, 0, 1, 0f);
+				
 				gl.glRotatef(-d.x, 0, 1.0f, 0f);
-				gl.glRotatef(d.y, 1.0f,0 , 0);
+				gl.glRotatef(d.y, 0.0f,0 , 1);
+				
+				gl.glRotatef(90, 0, 1, 0f);
 				ob.getBase().getModel().Draw(gl);
 				gl.glPopMatrix();
 			}
@@ -211,7 +221,7 @@ public class Drawer {
 
 		drawPlayerTank(player.getBase().getDir().x);
 
-		Vector3f pos = player.getBase().getPos();
+		Vector3f pos = player.getTurret().getPos();
 		gl.glTranslatef(-pos.x, -pos.y, -pos.z);
 
 		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
