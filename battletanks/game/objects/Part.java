@@ -72,10 +72,9 @@ public class Part{
 		dir = part.getDir();
 		if(rotJoined != null){
 			dir = new Vector2f(0,0);
-			Logger.getInstance().Log("TurretLocal:<" + dir.x +">," + "<" + dir.y +">");
-			Logger.getInstance().Log("rotJoined:<" + rotJoined.getDir().x +">," + "<" + rotJoined.getDir().y +">");
+
 			dir.add(part.getDir(), rotJoined.getDir());
-			Logger.getInstance().Log("TurretAdded:<" + dir.x +">," + "<" + dir.y +">");
+
 		}
 		
 		for(Part p : subparts){

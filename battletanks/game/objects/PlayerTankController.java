@@ -15,6 +15,7 @@ public class PlayerTankController implements Controller {
 	private boolean isBackward = false;
 	private boolean isLeft = false;
 	private boolean isRight = false;
+	private boolean dofire = true;
 	
 	Tank controlled;
 	public PlayerTankController(Tank c){
@@ -32,7 +33,7 @@ public class PlayerTankController implements Controller {
 		for (GameInput o : playerInput) {
 			if(o.getInputType() != INPUT_TYPE.VIEWX &&  o.getInputType() != INPUT_TYPE.VIEWY){
 			Logger.getInstance().debugVal("LastKey" , o.getInputType().name());
-			Logger.getInstance().Log("LastKey:" + o.getInputType().name());
+			
 			}
 			input = o.getInputType();
 			switch (input) {
@@ -51,6 +52,10 @@ public class PlayerTankController implements Controller {
 				isRight = true;
 				break;
 			case FIRE_PRESSED:
+				if(dofire == true){
+					controlled.fire();
+				}
+				dofire = false;
 				break;
 			case FORWARD_RELEASED:
 				isForward = false;
@@ -65,7 +70,7 @@ public class PlayerTankController implements Controller {
 				isRight = false;
 				break;
 			case FIRE_RELEASED:
-				//player stop
+				dofire = true;
 				break;
 			case VIEWX:
 				mousex = (int) o.getValue();
@@ -97,13 +102,13 @@ public class PlayerTankController implements Controller {
 			
 		}
 		
-		Logger.getInstance().debugVal("Pos", controlled.getTurret().getPos().toString());
-		Logger.getInstance().debugVal("Vel", controlled.getTurret().getPhys().getVel().toString());
-		Logger.getInstance().debugVal("Accel", controlled.getTurret().getPhys().getAccel().toString());
-		Logger.getInstance().debugVal("rot", controlled.getTurret().getDir().toString());
-		Logger.getInstance().debugVal("rotspeed", controlled.getTurret().getPhys().getDirSpeed().toString());
-		Logger.getInstance().debugVal("rotaccel", controlled.getTurret().getPhys().getDirAccel().toString());
-		Logger.getInstance().debugVal("LookDir", controlled.getTurret().toString());
+		Logger.getInstance().debugVal("Pos", controlled.getBase().getPos().toString());
+		Logger.getInstance().debugVal("Vel", controlled.getBase().getPhys().getVel().toString());
+		Logger.getInstance().debugVal("Accel", controlled.getBase().getPhys().getAccel().toString());
+		Logger.getInstance().debugVal("rot", controlled.getBase().getDir().toString());
+		Logger.getInstance().debugVal("rotspeed", controlled.getBase().getPhys().getDirSpeed().toString());
+		Logger.getInstance().debugVal("rotaccel", controlled.getBase().getPhys().getDirAccel().toString());
+		Logger.getInstance().debugVal("LookDir", controlled.getBase().toString());
 		
 		
 

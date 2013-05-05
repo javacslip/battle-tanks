@@ -1,8 +1,11 @@
 package battletanks.graphics;
 
+import java.util.Iterator;
+
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
+import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
 import javax.media.opengl.*;
@@ -13,6 +16,7 @@ import com.sun.opengl.util.gl2.GLUT;
 
 import battletanks.game.Gamestate;
 import battletanks.game.Logger;
+import battletanks.game.objects.Bullet;
 import battletanks.game.objects.GameObject;
 import battletanks.game.objects.Part;
 import battletanks.game.objects.Tank;
@@ -73,7 +77,7 @@ public class Drawer {
 					ob.getBase().getPos().z);
 			gl.glRotatef(ob.getBase().getDir().x, 1.0f, 0, 0f);
 			gl.glRotatef(ob.getBase().getDir().y, 0, 1.0f, 0);
-			glut.glutSolidCube(1);
+			//glut.glutSolidCube(1);
 			gl.glPopMatrix();
 		}
 
@@ -90,6 +94,30 @@ public class Drawer {
 				gl.glRotatef(p.getDir().y, 1.0f,0 , 0);
 				gl.glTranslatef(p.getCenterrot().x, p.getCenterrot().y, p.getCenterrot().z);
 				p.getModel().Draw(gl);
+				gl.glPopMatrix();
+			}
+		}
+		
+		
+		if (color == null)
+			gl.glColor3f(0.0F, 1F, 1F);
+		else
+			gl.glColor3f(color.x, color.y, color.z);
+		for (GameObject ob : Gamestate.getInstance().getBullets()) {
+			Bullet b = (Bullet)ob;
+			Iterator<Vector3f> it = b.getOldPos();
+			Iterator<Vector2f> id = b.getOldDir();
+			int c = 0;
+			
+			while (c < 25 && it.hasNext()) {
+				c++;
+				Vector3f p = it.next();
+				Vector2f d = id.next();
+				gl.glPushMatrix();
+				gl.glTranslatef(p.x, p.y, p.z);
+				gl.glRotatef(-d.x, 0, 1.0f, 0f);
+				gl.glRotatef(d.y, 1.0f,0 , 0);
+				ob.getBase().getModel().Draw(gl);
 				gl.glPopMatrix();
 			}
 		}
@@ -139,15 +167,14 @@ public class Drawer {
 
 		Tank player = (Tank) Gamestate.getInstance().getPlayer();
 
-		Logger.getInstance().Log("drawDir:<" + player.getLookDir().x + ">");
-		moveCamera(player.getLookDir().x, player.getLookDir().y);
+		moveCamera(player.getLookDir().x , player.getLookDir().y);
 
 		DrawBackground();
 
 		drawPlayerTank(player.getBase().getDir().x);
 
 		Vector3f pos = player.getBase().getPos();
-		gl.glTranslatef(pos.x, pos.y, pos.z);
+		gl.glTranslatef(-pos.x, -pos.y, -pos.z);
 
 		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
 		DrawGeometry(new Vector3f(.1f, .1f, .1f));
@@ -166,7 +193,7 @@ public class Drawer {
 	}
 
 	public void resize(int width, int height) {
-
+		
 		gl.glViewport(0, 0, width, height);
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
