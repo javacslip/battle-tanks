@@ -14,5 +14,6 @@ public interface GameObject {
 	public Part getBase();
 	void setController(Controller c);
 	
+	
 
 }

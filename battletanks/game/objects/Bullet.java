@@ -15,8 +15,8 @@ import battletanks.graphics.MODELS;
 
 public class Bullet extends GameObjectImp {
 
-	private float bulletSpeed = 4f;
-	private Vector3f gravity = new Vector3f(0, -.02f, 0);
+	private float bulletSpeed = 1f;
+	private Vector3f gravity = new Vector3f(0, -.005f, 0);
 
 	private LinkedList<Vector3f> oldPos;
 	private LinkedList<Vector2f> oldDir;
@@ -29,7 +29,7 @@ public class Bullet extends GameObjectImp {
 		base.getPhys().setDragconst(0.0f);
 		base.getPhys().setMaxvel(10f);
 		base.getPhys().setMaxaccel(10.0f);
-		Logger.getInstance().Log("new bullet");
+
 
 		oldPos = new LinkedList<Vector3f>();
 		oldDir = new LinkedList<Vector2f>();
@@ -43,6 +43,9 @@ public class Bullet extends GameObjectImp {
 
 		double radphi = Math.toRadians(direction.y);
 		double radtheta = Math.toRadians(direction.x);
+		this.base.getPhys().setRotdragconst(0);
+		//this.base.getPhys().setDirSpeed(0f, 1f);
+		
 		Vector3f v = new Vector3f();
 
 		v.x = +(float) Math.sin(radtheta) * bulletSpeed;
@@ -66,7 +69,7 @@ public class Bullet extends GameObjectImp {
 
 	public void update(long dtime) {
 
-		Logger.getInstance().Log("bulletpos:" + this.base.getPhys().getPos());
+		//Logger.getInstance().Log("bulletpos:" + this.base.getPhys().getPos());
 		this.base.getPhys().setAccel(gravity);
 		if (this.base.getPos().y < -.5) {
 			Gamestate.getInstance().removeObject(this);
@@ -80,8 +83,8 @@ public class Bullet extends GameObjectImp {
 		Vector2f d = new Vector2f();
 		float r = (float) Math.sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
 		
-		//d.x = (float) Math.toDegrees(Math.acos(-v.z/r));
-		//d.y = (float) Math.toDegrees(Math.atan2(v.y,v.x));
+		//d.x = (float) Math.toDegrees(Math.acos(v.z/r));
+		d.y = (float) Math.toDegrees(Math.atan2(v.y,v.x));
 		
 		
 		

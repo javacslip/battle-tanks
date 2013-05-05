@@ -17,7 +17,7 @@ public class Tank extends GameObjectImp {
 	private float rotRate = 1f;
 	private float turretRate = 7;
 	private int fireRate = 35;
-	private int lastFired = 300;
+	private int lastFired = 35;
 
 	private Part turret;
 
@@ -63,7 +63,7 @@ public class Tank extends GameObjectImp {
 		if(lastFired > fireRate){
 			Bullet b = new Bullet();
 			Gamestate.getInstance().addObject(b);
-			b.fire(new Vector3f(this.base.getPos()), new Vector2f(turret.getDir()));
+			b.fire(new Vector3f(this.turret.getPos()), new Vector2f(turret.getDir()));
 			
 			lastFired = 0;
 			return true;
@@ -88,8 +88,8 @@ public class Tank extends GameObjectImp {
 		Vector3f accel = new Vector3f();
 
 		accel.x = +(float) Math.sin(radtheta) * accelConst;
-		accel.z = -(float) (Math.cos(radtheta)) * accelConst;
 		accel.y = +(float) (Math.sin(radphi)) * accelConst;
+		accel.z = -(float) (Math.cos(radtheta)) * accelConst;
 
 		base.getPhys().setAccel(accel);
 
