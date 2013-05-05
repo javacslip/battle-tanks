@@ -135,7 +135,8 @@ public class Gamestate {
 		CollisionResult cr;
 		Vector3f overlap;
 		float scalar;
-		// enemy tank collision detection
+		
+		List<CollisionResult> tankObjCol = new ArrayList<CollisionResult>();
 		for(GameObject go : tanks){
 			for(GameObject ob : obstacles){
 				// get distance between tank and obstacle position
@@ -145,11 +146,31 @@ public class Gamestate {
 				z = ob.getBase().getPhys().getPos().z - go.getBase().getPhys().getPos().z;
 				d = (float) Math.sqrt(x*x + y*y + z*z);
 				if(d < (ob.getBase().getPhys().getRadius() + go.getBase().getPhys().getRadius())){
-					
+					cr = new CollisionResult();
+					cr.setCollided(ob);
+					overlap = new Vector3f(ob.getBase().getPhys().getPos());
+					overlap.sub(go.getBase().getPhys().getPos());
+					overlap.normalize();
+					scalar = ob.getBase().getPhys().getRadius() + go.getBase().getPhys().getRadius() - d;
+					overlap.scale(scalar);
+					cr.setVector(overlap);
+					tankObjCol.add(cr);
 				}
-				
 			}
+			Vector3f max = new Vector3f(0, 0, 0);
+			for(CollisionResult r : tankObjCol){
+				if(r.getOverlapVector().x > max.x){
+					max.x = r.getOverlapVector().x;
+				}
+				if(r.getOverlapVector().y > max.y){
+					max.y = r.getOverlapVector().y;
+				}
+			}
+			CollisionResult c = new CollisionResult();
+			c.setVector(max);
+			go.doCollision(c);
 		}
+		
 		
 		List<CollisionResult> playerObjCol = new ArrayList<CollisionResult>();
 		// player collision detection
@@ -199,6 +220,16 @@ public class Gamestate {
 		CollisionResult c = new CollisionResult();
 		c.setVector(max);
 		player.doCollision(c);
+		
+		List<CollisionResult> bulletObjCol = new ArrayList<CollisionResult>();
+		for(GameObject go : bullets){
+			for(GameObject et : tanks){
+				
+			}
+			for(GameObject ob : obstacles){
+				
+			}
+		}
 		
 
 	}

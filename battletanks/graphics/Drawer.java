@@ -33,6 +33,7 @@ public class Drawer {
 	GLUT glut;
 	private float znear, zfar;
 	private int width, height;
+	private boolean showBoundSphere;
 
 	public Drawer(GL2 gl2, GLU glu, GLUT glut) {
 
@@ -44,6 +45,8 @@ public class Drawer {
 
 		znear = 0.01f;
 		zfar = 1000.f;
+		
+		showBoundSphere = false;
 
 		gl2.glClearColor(.1f, .1f, .1f, 1f);
 		gl2.glClearDepth(1.0f);
@@ -83,6 +86,8 @@ public class Drawer {
 			gl.glRotatef(-ob.getBase().getDir().y, 0, 1.0f, 0);
 			gl.glRotatef(-ob.getBase().getDir().x, 1.0f, 0, 0f);
 			glut.glutSolidCube(1);
+			if(showBoundSphere)
+				glut.glutSolidSphere(ob.getBase().getPhys().getRadius(), 20, 20);
 			gl.glPopMatrix();
 		}
 		
@@ -103,7 +108,8 @@ public class Drawer {
 				gl.glTranslatef(p.getCenterrot().x, p.getCenterrot().y, p.getCenterrot().z);
 				
 				p.getModel().Draw(gl);
-				//glut.glutSolidSphere(.65,20,20);
+				if(showBoundSphere)
+					glut.glutSolidSphere(p.getPhys().getRadius(),20,20);
 				gl.glPopMatrix();
 			}
 		}
@@ -133,6 +139,8 @@ public class Drawer {
 				
 				gl.glRotatef(90, 0, 1, 0f);
 				ob.getBase().getModel().Draw(gl);
+				if(showBoundSphere)
+					glut.glutSolidSphere(ob.getBase().getPhys().getRadius(), 5, 5);
 				gl.glPopMatrix();
 			}
 		}
@@ -238,6 +246,14 @@ public class Drawer {
 
 		DrawUI();
 
+	}
+	
+	public void setShowBoundSphere(boolean value){
+		showBoundSphere = value;
+	}
+	
+	public boolean getShowBoundSphere(){
+		return showBoundSphere;
 	}
 
 	public void resize(int width, int height) {
