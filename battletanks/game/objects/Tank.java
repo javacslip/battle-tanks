@@ -19,6 +19,7 @@ public class Tank extends GameObjectImp {
 	private float turretRate = 7;
 	private int fireRate = 35;
 	private int lastFired = 35;
+	private int health = 3;
 
 	private Part turret;
 
@@ -38,7 +39,7 @@ public class Tank extends GameObjectImp {
 		turret.getPhys().setPos(new Vector3f(0.05f, 0.173f, 0f));
 		turret.setCenterrot(new Vector3f(-0.1f, 0, 0f));
 		base.getPhys().setDragconst(.005f);
-
+		base.getPhys().setRadius(.65f);
 	}
 
 	public void update(long dtime) {
@@ -59,12 +60,25 @@ public class Tank extends GameObjectImp {
 
 	}
 	
+	public int getHealth(){
+		return health;
+	}
+	
+	public void setHealth(int h){
+		health = h;
+	}
+	
+	public float getReloadPer(){
+		return Math.min((float)lastFired / (float)fireRate, 1);
+	}
+	
 	public boolean fire(){
 		
 		if(lastFired > fireRate){
 			Bullet b = new Bullet();
 			Gamestate.getInstance().addObject(b);
 			b.fire(new Vector3f(this.turret.getPos()), new Vector2f(turret.getDir()));
+			
 			
 			lastFired = 0;
 			return true;

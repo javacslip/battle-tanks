@@ -210,10 +210,10 @@ public class Gamestate {
 		}
 		Vector3f max = new Vector3f(0, 0, 0);
 		for(CollisionResult r : playerObjCol){
-			if(r.getOverlapVector().x > max.x){
+			if(Math.abs(r.getOverlapVector().x) > Math.abs(max.x)){
 				max.x = r.getOverlapVector().x;
 			}
-			if(r.getOverlapVector().y > max.y){
+			if(Math.abs(r.getOverlapVector().y) > Math.abs(max.y)){
 				max.y = r.getOverlapVector().y;
 			}
 		}
@@ -222,13 +222,33 @@ public class Gamestate {
 		player.doCollision(c);
 		
 		List<CollisionResult> bulletObjCol = new ArrayList<CollisionResult>();
+		boolean hit = false;
+		cr = new CollisionResult();
 		for(GameObject go : bullets){
 			for(GameObject et : tanks){
-				
+				x = go.getBase().getPhys().getPos().x - et.getBase().getPhys().getPos().x;
+				y = go.getBase().getPhys().getPos().y - et.getBase().getPhys().getPos().y;
+				z = go.getBase().getPhys().getPos().z - et.getBase().getPhys().getPos().z;
+				d = (float) Math.sqrt(x*x + y*y + z*z);
+				if(d < (go.getBase().getPhys().getRadius() + et.getBase().getPhys().getRadius())){
+					hit = true;
+					cr.setCollided(et);
+					break;
+				}
 			}
 			for(GameObject ob : obstacles){
-				
+				x = go.getBase().getPhys().getPos().x - ob.getBase().getPhys().getPos().x;
+				y = go.getBase().getPhys().getPos().y - ob.getBase().getPhys().getPos().y;
+				z = go.getBase().getPhys().getPos().z - ob.getBase().getPhys().getPos().z;
+				d = (float) Math.sqrt(x*x + y*y + z*z);
+				if(d < (go.getBase().getPhys().getRadius() + ob.getBase().getPhys().getRadius())){
+					hit = true;
+					cr.setCollided(ob);
+					break;
+				}
 			}
+			if(hit)
+				go.doCollision(cr);
 		}
 		
 
@@ -244,24 +264,21 @@ public class Gamestate {
 		// obstacles
 		for(int i = 0; i < 30; i++){
 			ob = new Obstacle();
-			ob.getBase().getPhys().setPos(rf.nextFloat() * 20 - 10, .25f, rf.nextFloat() * 20 - 10);
+			ob.getBase().getPhys().setPos(rf.nextFloat() * 20 - 10, .35f, rf.nextFloat() * 20 - 10);
 			ob.getBase().getPhys().setDir(0, rf.nextFloat() * 180);
-			ob.getBase().getPhys().setRadius(.8f);
 			addObject(ob);
 		}
 		// enemy tanks
-		for(int i = 0; i < 5; i++){
+		for(int i = 0; i < 6; i++){
 			et = new Tank();
 			et.setController(new EnemyTankController(et));
-			et.getBase().getPhys().setPos(rf.nextFloat() * 20 - 10, -.16f, rf.nextFloat() * 20 - 10);
+			et.getBase().getPhys().setPos(rf.nextFloat() * 20 - 10, 0f, rf.nextFloat() * 20 - 10);
 			et.getBase().getPhys().setDir(0,0);
-			et.getBase().getPhys().setRadius(.65f);
 			addObject(et);
 		}
 		// player
-		player.getBase().getPhys().setPos(0, -.16f, 0);
+		player.getBase().getPhys().setPos(0, 0, 0);
 		player.getBase().getPhys().setDir(0, 0);
-		player.getBase().getPhys().setRadius(.65f);
 		
 	}
 	
