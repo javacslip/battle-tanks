@@ -15,6 +15,7 @@ public class Obstacle extends GameObjectImp {
 	public Obstacle(){
 		super();
 		base = new Part(MODELS.SQUARE);
+		base.getPhys().setRadius(.8f);
 
 	}
 	

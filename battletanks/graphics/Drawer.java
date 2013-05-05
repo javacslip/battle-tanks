@@ -33,6 +33,7 @@ public class Drawer {
 	GLUT glut;
 	private float znear, zfar;
 	private int width, height;
+	private boolean showBoundSphere;
 
 	public Drawer(GL2 gl2, GLU glu, GLUT glut) {
 
@@ -44,6 +45,8 @@ public class Drawer {
 
 		znear = 0.01f;
 		zfar = 1000.f;
+		
+		showBoundSphere = false;
 
 		gl2.glClearColor(.1f, .1f, .1f, 1f);
 		gl2.glClearDepth(1.0f);
@@ -83,16 +86,23 @@ public class Drawer {
 			gl.glRotatef(-ob.getBase().getDir().y, 0, 1.0f, 0);
 			gl.glRotatef(-ob.getBase().getDir().x, 1.0f, 0, 0f);
 			glut.glutSolidCube(1);
+			if(showBoundSphere)
+				glut.glutSolidSphere(ob.getBase().getPhys().getRadius(), 20, 20);
 			gl.glPopMatrix();
 		}
 		
 
-		if (color == null)
-			gl.glColor3f(0.9F, 0.0F, .0F);
-		else
-			gl.glColor3f(color.x, color.y, color.z);
+
 
 		for (GameObject ob : Gamestate.getInstance().getTanks()) {
+			Tank t = (Tank)ob;
+			int hp = t.getHealth();
+			
+			if (color == null)
+				gl.glColor3f(hp * .2f +.4f, 0.0F, .0F);
+			else
+				gl.glColor3f(color.x, color.y, color.z);
+			
 			for (Part p : ob.getParts()) {
 				gl.glPushMatrix();
 				gl.glTranslatef(p.getPos().x, p.getPos().y, p.getPos().z);
@@ -103,7 +113,8 @@ public class Drawer {
 				gl.glTranslatef(p.getCenterrot().x, p.getCenterrot().y, p.getCenterrot().z);
 				
 				p.getModel().Draw(gl);
-				//glut.glutSolidSphere(.65,20,20);
+				if(showBoundSphere)
+					glut.glutSolidSphere(p.getPhys().getRadius(),20,20);
 				gl.glPopMatrix();
 			}
 		}
@@ -133,6 +144,8 @@ public class Drawer {
 				
 				gl.glRotatef(90, 0, 1, 0f);
 				ob.getBase().getModel().Draw(gl);
+				if(showBoundSphere)
+					glut.glutSolidSphere(ob.getBase().getPhys().getRadius(), 5, 5);
 				gl.glPopMatrix();
 			}
 		}
@@ -187,12 +200,31 @@ public class Drawer {
 	    gl.glDisable(gl.GL_DEPTH_TEST);
 
 	    // draw HUD
+	    // aiming reticle
 		gl.glBegin(gl.GL_LINE_LOOP);
 		gl.glColor3f(1, 0, 0);
 		gl.glVertex2d(lx, lh);
 		gl.glVertex2d(rx, lh);
 		gl.glVertex2d(rx, rh);
 		gl.glVertex2d(lx, rh);
+		gl.glEnd();
+		// firing status
+		gl.glBegin(gl.GL_LINE_LOOP);
+		gl.glColor3f(1, 0, 0);
+		gl.glVertex2d(width - 150, height - 35);
+		gl.glVertex2d(width - 10, height - 35);
+		gl.glVertex2d(width - 10, height - 10);
+		gl.glVertex2d(width - 150, height - 10);
+		gl.glEnd();
+		Tank player = (Tank)Gamestate.getInstance().getPlayer();
+		float per = player.getReloadPer();
+		System.out.println(per);
+		gl.glBegin(gl.GL_QUADS);
+		gl.glColor3f(1, 0, 0);
+		gl.glVertex2f(width - 150, height - 10);
+		gl.glVertex2f(width - 150 + (per * 140.0f), height - 10);		
+		gl.glVertex2f(width - 150 + (per * 140.0f), height - 35);
+		gl.glVertex2f(width - 150, height - 35);
 		gl.glEnd();
 	    
 		// set up 3d drawing
@@ -238,6 +270,14 @@ public class Drawer {
 
 		DrawUI();
 
+	}
+	
+	public void setShowBoundSphere(boolean value){
+		showBoundSphere = value;
+	}
+	
+	public boolean getShowBoundSphere(){
+		return showBoundSphere;
 	}
 
 	public void resize(int width, int height) {

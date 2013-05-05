@@ -206,6 +206,9 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 			Gamestate.getInstance().AddInput(
 					new GameInput(INPUT_TYPE.FIRE_PRESSED));
 			break;
+		case KeyEvent.VK_B:
+			draw.setShowBoundSphere(!draw.getShowBoundSphere());
+			break;
 		}
 
 	}

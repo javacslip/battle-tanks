@@ -135,7 +135,8 @@ public class Gamestate {
 		CollisionResult cr;
 		Vector3f overlap;
 		float scalar;
-		// enemy tank collision detection
+		
+		List<CollisionResult> tankObjCol = new ArrayList<CollisionResult>();
 		for(GameObject go : tanks){
 			for(GameObject ob : obstacles){
 				// get distance between tank and obstacle position
@@ -145,11 +146,31 @@ public class Gamestate {
 				z = ob.getBase().getPhys().getPos().z - go.getBase().getPhys().getPos().z;
 				d = (float) Math.sqrt(x*x + y*y + z*z);
 				if(d < (ob.getBase().getPhys().getRadius() + go.getBase().getPhys().getRadius())){
-					
+					cr = new CollisionResult();
+					cr.setCollided(ob);
+					overlap = new Vector3f(ob.getBase().getPhys().getPos());
+					overlap.sub(go.getBase().getPhys().getPos());
+					overlap.normalize();
+					scalar = ob.getBase().getPhys().getRadius() + go.getBase().getPhys().getRadius() - d;
+					overlap.scale(scalar);
+					cr.setVector(overlap);
+					tankObjCol.add(cr);
 				}
-				
 			}
+			Vector3f max = new Vector3f(0, 0, 0);
+			for(CollisionResult r : tankObjCol){
+				if(r.getOverlapVector().x > max.x){
+					max.x = r.getOverlapVector().x;
+				}
+				if(r.getOverlapVector().y > max.y){
+					max.y = r.getOverlapVector().y;
+				}
+			}
+			CollisionResult c = new CollisionResult();
+			c.setVector(max);
+			go.doCollision(c);
 		}
+		
 		
 		List<CollisionResult> playerObjCol = new ArrayList<CollisionResult>();
 		// player collision detection
@@ -200,6 +221,36 @@ public class Gamestate {
 		c.setVector(max);
 		player.doCollision(c);
 		
+		List<CollisionResult> bulletObjCol = new ArrayList<CollisionResult>();
+		boolean hit = false;
+		cr = new CollisionResult();
+		for(GameObject go : bullets){
+			for(GameObject et : tanks){
+				x = go.getBase().getPhys().getPos().x - et.getBase().getPhys().getPos().x;
+				y = go.getBase().getPhys().getPos().y - et.getBase().getPhys().getPos().y;
+				z = go.getBase().getPhys().getPos().z - et.getBase().getPhys().getPos().z;
+				d = (float) Math.sqrt(x*x + y*y + z*z);
+				if(d < (go.getBase().getPhys().getRadius() + et.getBase().getPhys().getRadius())){
+					hit = true;
+					cr.setCollided(et);
+					break;
+				}
+			}
+			for(GameObject ob : obstacles){
+				x = go.getBase().getPhys().getPos().x - ob.getBase().getPhys().getPos().x;
+				y = go.getBase().getPhys().getPos().y - ob.getBase().getPhys().getPos().y;
+				z = go.getBase().getPhys().getPos().z - ob.getBase().getPhys().getPos().z;
+				d = (float) Math.sqrt(x*x + y*y + z*z);
+				if(d < (go.getBase().getPhys().getRadius() + ob.getBase().getPhys().getRadius())){
+					hit = true;
+					cr.setCollided(ob);
+					break;
+				}
+			}
+			if(hit)
+				go.doCollision(cr);
+		}
+		
 
 	}
 	
@@ -215,22 +266,19 @@ public class Gamestate {
 			ob = new Obstacle();
 			ob.getBase().getPhys().setPos(rf.nextFloat() * 20 - 10, .35f, rf.nextFloat() * 20 - 10);
 			ob.getBase().getPhys().setDir(0, rf.nextFloat() * 180);
-			ob.getBase().getPhys().setRadius(.8f);
-			//addObject(ob);
+			addObject(ob);
 		}
 		// enemy tanks
-		for(int i = 0; i < 1; i++){
+		for(int i = 0; i < 6; i++){
 			et = new Tank();
 			et.setController(new EnemyTankController(et));
 			et.getBase().getPhys().setPos(rf.nextFloat() * 20 - 10, 0f, rf.nextFloat() * 20 - 10);
 			et.getBase().getPhys().setDir(0,0);
-			et.getBase().getPhys().setRadius(.65f);
 			addObject(et);
 		}
 		// player
 		player.getBase().getPhys().setPos(0, 0, 0);
 		player.getBase().getPhys().setDir(0, 0);
-		player.getBase().getPhys().setRadius(.65f);
 		
 	}
 	
