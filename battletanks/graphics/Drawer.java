@@ -211,21 +211,32 @@ public class Drawer {
 		// firing status
 		gl.glBegin(gl.GL_LINE_LOOP);
 		gl.glColor3f(1, 0, 0);
-		gl.glVertex2d(width - 150, height - 35);
-		gl.glVertex2d(width - 10, height - 35);
+		gl.glVertex2d(width - 200, height - 50);
+		gl.glVertex2d(width - 10, height - 50);
 		gl.glVertex2d(width - 10, height - 10);
-		gl.glVertex2d(width - 150, height - 10);
+		gl.glVertex2d(width - 200, height - 10);
 		gl.glEnd();
 		Tank player = (Tank)Gamestate.getInstance().getPlayer();
 		float per = player.getReloadPer();
 		System.out.println(per);
+		gl.glEnable( gl.GL_BLEND );
+		gl.glBlendFunc( gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA );
 		gl.glBegin(gl.GL_QUADS);
-		gl.glColor3f(1, 0, 0);
-		gl.glVertex2f(width - 150, height - 10);
-		gl.glVertex2f(width - 150 + (per * 140.0f), height - 10);		
-		gl.glVertex2f(width - 150 + (per * 140.0f), height - 35);
-		gl.glVertex2f(width - 150, height - 35);
+		gl.glColor4f(1, 0, 0, .5f);
+		gl.glVertex2f(width - 200, height - 10);
+		gl.glVertex2f(width - 200 + (per * 190.0f), height - 10);		
+		gl.glVertex2f(width - 200 + (per * 190.0f), height - 50);
+		gl.glVertex2f(width - 200, height - 50);
 		gl.glEnd();
+		// player health status
+		int hp = player.getHealth();
+		float startX;
+		float startY;
+		for(int i = 0; i < hp; i++){
+			gl.glBegin(gl.GL_LINE_LOOP);
+			gl.glColor3f(1, 0, 0);
+			gl.glEnd();
+		}
 	    
 		// set up 3d drawing
 	    gl.glViewport(0, 0, width, height);
