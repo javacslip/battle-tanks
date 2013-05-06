@@ -9,6 +9,7 @@ import javax.vecmath.Vector3f;
 
 
 import battletanks.game.objects.EnemyTankController;
+import battletanks.game.objects.ExplosionCluster;
 import battletanks.game.objects.GameObject;
 import battletanks.game.objects.Obstacle;
 import battletanks.game.objects.PlayerTankController;
@@ -22,7 +23,10 @@ public class Gamestate {
 	private List<GameObject> tanks;
 	private List<GameObject> bullets;
 	
+	private List<GameObject> explosions;
+	
 	private GameObject player;
+	
 	private int startTankCount;
 	private int tankCount;
 	
@@ -36,13 +40,18 @@ public class Gamestate {
 		lasttime = System.currentTimeMillis();
 		obstacles = new ArrayList<GameObject>();
 		tanks = new ArrayList <GameObject>();
+		explosions = new ArrayList <GameObject>();
 		bullets = new ArrayList <GameObject>();
 		player = new Tank();
 		player.setController(new PlayerTankController((Tank) player));
 		playerInput = new ArrayList<GameInput>();
-		startTankCount = 3;
-		tankCount = 3;
+		startTankCount = 1;
+		tankCount = 1;
 		setUpMap();
+	}
+	
+	public int getTankCount(){
+		return tankCount;
 	}
 	
 	public void setTankCount(int i){
@@ -56,6 +65,10 @@ public class Gamestate {
 		else if(o instanceof Tank){
 			tanks.add(o);
 		}
+		
+		else if(o instanceof ExplosionCluster){
+			explosions.add(o);
+		}
 		else{
 			bullets.add(o);
 		}
@@ -65,6 +78,10 @@ public class Gamestate {
 	public void removeObject(GameObject o){
 		removelist.add(o);
 
+	}
+	
+	public List<GameObject> getExplosions(){
+		return explosions;
 	}
 	
 	public GameObject getPlayer(){
@@ -112,7 +129,14 @@ public class Gamestate {
 				i = tanks.indexOf(o);
 				if (i != -1)
 					tanks.remove(i);
-			} else {
+			}
+			else if (o instanceof ExplosionCluster) {
+				i = explosions.indexOf(o);
+				if (i != -1)
+					explosions.remove(i);
+			}
+			
+			else {
 				i = bullets.indexOf(o);
 				if (i != -1)
 					bullets.remove(i);
@@ -136,6 +160,11 @@ public class Gamestate {
 		for(GameObject go : bullets){
 			go.update(deltaTime);
 		}
+		
+		for(GameObject go : explosions){
+			go.update(deltaTime);
+		}
+		
 		
 		player.update(deltaTime);
 		
@@ -298,7 +327,11 @@ public class Gamestate {
 			}
 		}
 		
-		
+		if(tankCount == 0){
+			startTankCount = startTankCount * 2;
+			tankCount = startTankCount;
+			setUpMap();
+		}
 
 	}
 	
@@ -310,9 +343,9 @@ public class Gamestate {
 		Tank et;
 		Random rf = new Random(System.nanoTime());
 		// obstacles
-		for(int i = 0; i < 15; i++){
+		for(int i = 0; i < 12; i++){
 			ob = new Obstacle();
-			ob.getBase().getPhys().setPos(rf.nextFloat() * 20 - 10, .35f, rf.nextFloat() * 20 - 10);
+			ob.getBase().getPhys().setPos(rf.nextFloat() * 20 - 19, .35f, rf.nextFloat() * 20 - 7);
 			ob.getBase().getPhys().setDir(0, rf.nextFloat() * 180);
 			ob.setTeam(3);
 			addObject(ob);
@@ -321,7 +354,7 @@ public class Gamestate {
 		for(int i = 0; i < tankCount; i++){
 			et = new Tank();
 			et.setController(new EnemyTankController(et));
-			et.getBase().getPhys().setPos(rf.nextFloat() * 20 - 10, 0f, rf.nextFloat() * 20 - 10);
+			et.getBase().getPhys().setPos(rf.nextFloat() * 20 - 25, 0f, rf.nextFloat() * 20 - 15);
 			et.getBase().getPhys().setDir( rf.nextFloat() * 180,0);
 			et.setTeam(2);
 			addObject(et);
@@ -330,10 +363,13 @@ public class Gamestate {
 		player.getBase().getPhys().setPos(0, 0, 0);
 		player.getBase().getPhys().setDir(0, 0);
 		player.setTeam(1);
+		((Tank)player).setHealth(3);
 		
 	}
 	
 	public void reset(){
+		tankCount = 1;
+		startTankCount = 1;
 		Gamestate.instance = null;
 	}
 	
