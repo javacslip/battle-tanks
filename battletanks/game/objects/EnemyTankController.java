@@ -88,8 +88,8 @@ public class EnemyTankController implements Controller {
 				firetarget = null;
 			} else {
 
-				boolean t1 = turretfacepos(firetarget, 2.0f);
-				boolean t2 = facepos(firetarget, 35f);
+				boolean t1 = turretfacepos(firetarget, 1.5f);
+				boolean t2 = facepos(firetarget, 45f);
 
 				if (dist > 8 && count % 4 == 0) {
 					controlled.moveForward();
@@ -111,6 +111,13 @@ public class EnemyTankController implements Controller {
 			float dist = tmp.length();
 
 			boolean t1 = facepos(movetarget, 1.5f);
+			
+			if(tdir - dir > 0){
+				controlled.setLookImpulse((int) 2f, 0);
+			}
+			else{
+				controlled.setLookImpulse((int) -2f, 0);
+			}
 
 			if (dist > 10f) {
 				controlled.moveForward();
@@ -129,6 +136,8 @@ public class EnemyTankController implements Controller {
 
 
 	}
+	
+	
 
 	private boolean facepos(Vector2f target, float tolerance) {
 		float angle = (float) Math.toDegrees(Math.atan2(pos.y - target.y, pos.x
@@ -157,11 +166,11 @@ public class EnemyTankController implements Controller {
 		angle -= 90;
 
 		if (angle - tdir < -tolerance) {
-			controlled.setLookImpulse((int) 2f, 0);
+			controlled.setLookImpulse((int) 4f, 0);
 
 			return false;
 		} else if (angle - tdir > tolerance) {
-			controlled.setLookImpulse((int) -2f, 0);
+			controlled.setLookImpulse((int) -4f, 0);
 
 			return false;
 		}

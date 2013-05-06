@@ -11,11 +11,23 @@ import battletanks.graphics.MODELS;
 
 
 public class Obstacle extends GameObjectImp {
+	public float getSize() {
+		return size;
+	}
 
-	public Obstacle(){
+
+	public void setSize(float size) {
+		this.size = size;
+	}
+
+
+	float size;
+
+	public Obstacle(float size){
 		super();
+		this.size = size;
 		base = new Part(MODELS.SQUARE);
-		base.getPhys().setRadius(.8f);
+		base.getPhys().setRadius(.8f*size);
 		
 	}
 	

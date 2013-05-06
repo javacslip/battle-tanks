@@ -7,3 +7,4 @@ lib32
 *.classpath
 lib64
 build
+.fatjar

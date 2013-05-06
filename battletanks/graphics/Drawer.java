@@ -22,6 +22,7 @@ import battletanks.game.objects.Bullet;
 import battletanks.game.objects.ExplosionCluster;
 import battletanks.game.objects.ExplosionPoint;
 import battletanks.game.objects.GameObject;
+import battletanks.game.objects.Obstacle;
 import battletanks.game.objects.Part;
 import battletanks.game.objects.Tank;
 
@@ -82,12 +83,13 @@ public class Drawer {
 		else
 			gl.glColor3f(color.x, color.y, color.z);
 		for (GameObject ob : Gamestate.getInstance().getObstacles()) {
+			Obstacle o = (Obstacle) ob;
 			gl.glPushMatrix();
 			gl.glTranslatef(ob.getBase().getPos().x, ob.getBase().getPos().y,
 					ob.getBase().getPos().z);
 			gl.glRotatef(-ob.getBase().getDir().y, 0, 1.0f, 0);
 			gl.glRotatef(-ob.getBase().getDir().x, 1.0f, 0, 0f);
-			glut.glutSolidCube(1);
+			glut.glutSolidCube(o.getSize());
 			if(showBoundSphere)
 				glut.glutSolidSphere(ob.getBase().getPhys().getRadius(), 20, 20);
 			gl.glPopMatrix();
@@ -188,6 +190,11 @@ public class Drawer {
 		float rx = (float)center.x + 100.f;
 		float rh = (float)center.y + 50.f;
 		
+		float l2x = (float)center.x - 50.f;
+		float l2h = (float)center.y - 25.f;
+		float r2x = (float)center.x + 50.f;
+		float r2h = (float)center.y + 25.f;
+		
 		// set up 2d drawing
 		gl.glMatrixMode(gl.GL_PROJECTION);
 		gl.glLoadIdentity();
@@ -196,25 +203,48 @@ public class Drawer {
 	    gl.glLoadIdentity();
 	    gl.glTranslatef(0.375f, 0.375f, 0.0f);
 	    gl.glDisable(gl.GL_DEPTH_TEST);
+	    
+		gl.glEnable( gl.GL_BLEND );
+		gl.glBlendFunc( gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA );
+
+		gl.glColor4f(0, 1, 0, .7f);
 
 	    // draw HUD
 	    // aiming reticle
 		gl.glBegin(gl.GL_LINES);
-		gl.glColor3f(1, 0, 0);
+
 		gl.glVertex2f(lx, lh);
-		gl.glVertex2f(rx, rh);
+		gl.glVertex2f(l2x, l2h);
 		gl.glEnd();
 		gl.glBegin(gl.GL_LINES);
-		gl.glColor3f(1, 0, 0);
+	
 		gl.glVertex2f(lx, rh);
+		gl.glVertex2f(l2x, r2h);
+		gl.glEnd();
+		
+		
+		gl.glBegin(gl.GL_LINES);
+
+		gl.glVertex2f(rx, rh);
+		gl.glVertex2f(r2x, r2h);
+		gl.glEnd();
+		gl.glBegin(gl.GL_LINES);
+	
 		gl.glVertex2f(rx, lh);
+		gl.glVertex2f(r2x, l2h);
 		gl.glEnd();
 		// firing status
+		
+		gl.glEnable( gl.GL_BLEND );
+		gl.glBlendFunc( gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA );
+
+		gl.glColor4f(0, 1, 0, .4f);
+		
 		gl.glBegin(gl.GL_LINE_LOOP);
-		gl.glColor3f(1, 0, 0);
+		rx += 60;
 		gl.glVertex2d(rx + 20, lh - 45);
-		gl.glVertex2d(rx + 60, lh - 45);
-		gl.glVertex2d(rx + 60, lh + 135);
+		gl.glVertex2d(rx + 50, lh - 45);
+		gl.glVertex2d(rx + 50, lh + 135);
 		gl.glVertex2d(rx + 20, lh + 135);
 		gl.glEnd();
 		Tank player = (Tank)Gamestate.getInstance().getPlayer();
@@ -222,27 +252,31 @@ public class Drawer {
 		gl.glEnable( gl.GL_BLEND );
 		gl.glBlendFunc( gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA );
 		gl.glBegin(gl.GL_QUADS);
-		gl.glColor4f(1, 0, 0, .3f);
+		gl.glColor4f(0, 1, 0, .2f);
 		gl.glVertex2f(rx + 20, lh + 135);
-		gl.glVertex2f(rx + 60, lh + 135);		
-		gl.glVertex2f(rx + 60, lh + 135 - (per * 180.f));
+		gl.glVertex2f(rx + 50, lh + 135);		
+		gl.glVertex2f(rx + 50, lh + 135 - (per * 180.f));
 		gl.glVertex2f(rx + 20, lh + 135 - (per * 180.f));
 		gl.glEnd();
 		// player health status
 		int hp = player.getHealth();
-		float startX = 30f;
-		float startY = 30f;
+		float startX = center.x - hp/2f * 60f;
+		float startY = rh + 300f;
 		for(int i = 0; i < hp; i++){
+			gl.glEnable( gl.GL_BLEND );
+			gl.glBlendFunc( gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA );
 			gl.glBegin(gl.GL_QUADS);
-			gl.glColor3f(1, 0, 0);
-			gl.glVertex2f(startX, startY + 30);
-			gl.glVertex2f(startX + 30, startY + 30);
-			gl.glVertex2f(startX + 30, startY);
+			gl.glColor4f(0, 1, 0, .4f);
+
+			gl.glVertex2f(startX, startY + 50);
+			gl.glVertex2f(startX + 50, startY + 50);
+			gl.glVertex2f(startX + 50, startY);
 			gl.glVertex2f(startX, startY);
 			gl.glEnd();
-			startX+=40;
+			startX+=60;
 		}
-	    
+		
+
 		// set up 3d drawing
 	    gl.glViewport(0, 0, width, height);
 		gl.glMatrixMode(GL2.GL_PROJECTION);
@@ -365,9 +399,17 @@ public class Drawer {
 	}
 	
 	public void drawUIText(TextRenderer renderer){
-		renderer.draw("HEALTH", 30, height - 25);
-		renderer.draw("WAVE: " + Gamestate.getInstance().getWave(), width - 200, height - 25);
-		renderer.draw("ENEMIES LEFT: " + Gamestate.getInstance().getTankCount(), width - 125, height - 25);
+		//renderer.draw("HEALTH", 30, height - 25);
+		renderer.draw("WAVE: " + Gamestate.getInstance().getWave(), width - 350, height - 45);
+		if(Gamestate.getInstance().getWave() == 0){
+			renderer.draw("PRESS SPACE TO START", width/2 - 215,height/2 + 150);
+		}
+		else if(Gamestate.getInstance().isRoundover()){
+			renderer.draw("WAVE COMPLETE", width/2 - 125,height/2 + 200);
+			renderer.draw("PRESS SPACE TO CONTINUE", width/2 - 215,height/2 + 150);
+		}
+		
+		renderer.draw("ENEMIES LEFT: " + Gamestate.getInstance().getTankCount(), width - 350, height - 95);
 	}
 
 	public void resize(int width, int height) {

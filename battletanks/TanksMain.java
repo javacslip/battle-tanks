@@ -34,7 +34,7 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 		MouseListener, MouseMotionListener, ActionListener {
 
 	// mouse control variables
-	private boolean debugOut = true;
+	private boolean debugOut = false;
 	boolean fullscreen = true;
 	private final GLCanvas canvas;
 	private int winW = 1440, winH = 900;
@@ -42,7 +42,8 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 	private FPSAnimator animator;
 	Drawer draw;
 	private long time = System.nanoTime();
-	TextRenderer renderer;
+	TextRenderer rendererlg;
+	TextRenderer renderersm;
 	Robot robot;
 	SOUNDS sfx;
 
@@ -75,12 +76,13 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 		canvas.requestFocus();
 
 		if(fullscreen == true){
+			
 			GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
 	
 			ge.getDefaultScreenDevice().setFullScreenWindow(this);
 		}
 		else{
-			
+			setUndecorated(false);
 		
 		//this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		}
@@ -117,12 +119,20 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 		draw.Draw(Gamestate.getInstance());
 
 		if(debugOut){
-			renderer.beginRendering(drawable.getWidth(), drawable.getHeight());
-			renderer.setColor(1.0f, 0.2f, 0.2f, 1f);
-			Logger.getInstance().display(renderer);
-			draw.drawUIText(renderer);
-			renderer.endRendering();
+			renderersm.beginRendering(drawable.getWidth(), drawable.getHeight());
+			renderersm.setColor(.0f, 1f, 0.f, 1f);
+
+			
+			Logger.getInstance().display(renderersm);
+
+			renderersm.endRendering();
 		}
+			
+			rendererlg.beginRendering(drawable.getWidth(), drawable.getHeight());
+			renderersm.setColor(.0f, 1f, 0.f, 1f);
+			draw.drawUIText(rendererlg);
+			rendererlg.endRendering();
+		
 
 	}
 
@@ -137,7 +147,9 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 		gl.setSwapInterval(1);
 		GLU glu = new GLU();
 		GLUT glut = new GLUT();
-		renderer = new TextRenderer(new Font("Dialog", Font.BOLD, 12));
+		rendererlg = new TextRenderer(new Font("SansSerif", Font.BOLD, 32));
+		rendererlg.setSmoothing(true);
+		renderersm = new TextRenderer(new Font("Dialog", Font.BOLD, 12));
 		draw = new Drawer(gl, glu, glut);
 		draw.LoadRes();
 
@@ -207,15 +219,16 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 					new GameInput(INPUT_TYPE.RIGHT_PRESSED));
 			break;
 		case KeyEvent.VK_SPACE:
-			Gamestate.getInstance().AddInput(
-					new GameInput(INPUT_TYPE.FIRE_PRESSED));
+			Gamestate.getInstance().nextRound();
 			break;
 		case KeyEvent.VK_B:
 			draw.setShowBoundSphere(!draw.getShowBoundSphere());
 			break;
-		case KeyEvent.VK_R:
+		case KeyEvent.VK_F1:
 			Gamestate.getInstance().reset();
 			break;
+			
+			
 		}
 
 	}
