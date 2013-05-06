@@ -77,7 +77,7 @@ public class Tank extends GameObjectImp {
 		
 		if(lastFired > fireRate){
 			Bullet b = new Bullet();
-			b.setTeam(1);
+			b.setTeam(this.getTeam());
 			Gamestate.getInstance().addObject(b);
 			b.fire(new Vector3f(this.turret.getPos()), new Vector2f(turret.getDir()));
 			
