@@ -49,12 +49,14 @@ public class Tank extends GameObjectImp {
 			if(this == Gamestate.getInstance().getPlayer()){
 				Gamestate.getInstance().reset();
 			}
+
 			Vector3f bpos = new Vector3f(this.getBase().getPos());
 			Gamestate.getInstance().addObject(new ExplosionCluster(bpos,  new Vector3f(0,1.2f,0),20));
 			this.setController(new NoController());
 			this.dead = true;
 			this.base.unjoin(this.turret);
 			this.parts.remove(this.turret);
+
 
 		}
 		else{
