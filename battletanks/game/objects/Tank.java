@@ -20,6 +20,7 @@ public class Tank extends GameObjectImp {
 	private int fireRate = 35;
 	private int lastFired = 35;
 	private int health = 3;
+	public int team;
 
 	private Part turret;
 
@@ -76,6 +77,7 @@ public class Tank extends GameObjectImp {
 		
 		if(lastFired > fireRate){
 			Bullet b = new Bullet();
+			b.setTeam(1);
 			Gamestate.getInstance().addObject(b);
 			b.fire(new Vector3f(this.turret.getPos()), new Vector2f(turret.getDir()));
 			
@@ -152,6 +154,16 @@ public class Tank extends GameObjectImp {
 		tank.y = 0;
 		this.base.getPhys().setPos(tank);
 		
+	}
+
+	@Override
+	public int getTeam() {
+		return team;
+	}
+
+	@Override
+	public void setTeam(int i) {
+		team = i;
 	}
 
 }

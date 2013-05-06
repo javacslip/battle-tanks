@@ -157,6 +157,23 @@ public class Gamestate {
 					tankObjCol.add(cr);
 				}
 			}
+			for(GameObject ob : tanks){
+				x = ob.getBase().getPhys().getPos().x - go.getBase().getPhys().getPos().x;
+				y = ob.getBase().getPhys().getPos().y - go.getBase().getPhys().getPos().y;
+				z = ob.getBase().getPhys().getPos().z - go.getBase().getPhys().getPos().z;
+				d = (float) Math.sqrt(x*x + y*y + z*z);
+				if(d < (ob.getBase().getPhys().getRadius() + go.getBase().getPhys().getRadius())){
+					cr = new CollisionResult();
+					cr.setCollided(ob);
+					overlap = new Vector3f(ob.getBase().getPhys().getPos());
+					overlap.sub(go.getBase().getPhys().getPos());
+					overlap.normalize();
+					scalar = ob.getBase().getPhys().getRadius() + go.getBase().getPhys().getRadius() - d;
+					overlap.scale(scalar);
+					cr.setVector(overlap);
+					tankObjCol.add(cr);
+				}
+			}
 			Vector3f max = new Vector3f(0, 0, 0);
 			for(CollisionResult r : tankObjCol){
 				if(r.getOverlapVector().x > max.x){
@@ -220,11 +237,12 @@ public class Gamestate {
 		CollisionResult c = new CollisionResult();
 		c.setVector(max);
 		player.doCollision(c);
+		playerObjCol.clear();
 		
-		List<CollisionResult> bulletObjCol = new ArrayList<CollisionResult>();
 		boolean hit = false;
 		cr = new CollisionResult();
 		for(GameObject go : bullets){
+
 			for(GameObject et : tanks){
 				x = go.getBase().getPhys().getPos().x - et.getBase().getPhys().getPos().x;
 				y = go.getBase().getPhys().getPos().y - et.getBase().getPhys().getPos().y;
@@ -262,10 +280,11 @@ public class Gamestate {
 		Tank et;
 		Random rf = new Random(System.nanoTime());
 		// obstacles
-		for(int i = 0; i < 30; i++){
+		for(int i = 0; i < 15; i++){
 			ob = new Obstacle();
 			ob.getBase().getPhys().setPos(rf.nextFloat() * 20 - 10, .35f, rf.nextFloat() * 20 - 10);
 			ob.getBase().getPhys().setDir(0, rf.nextFloat() * 180);
+			ob.setTeam(3);
 			addObject(ob);
 		}
 		// enemy tanks
@@ -274,11 +293,13 @@ public class Gamestate {
 			et.setController(new EnemyTankController(et));
 			et.getBase().getPhys().setPos(rf.nextFloat() * 20 - 10, 0f, rf.nextFloat() * 20 - 10);
 			et.getBase().getPhys().setDir(0,0);
+			et.setTeam(2);
 			addObject(et);
 		}
 		// player
 		player.getBase().getPhys().setPos(0, 0, 0);
 		player.getBase().getPhys().setDir(0, 0);
+		player.setTeam(1);
 		
 	}
 	

@@ -33,5 +33,19 @@ public class Obstacle extends GameObjectImp {
 	}
 
 
+	@Override
+	public int getTeam() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public void setTeam(int i) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 
 }

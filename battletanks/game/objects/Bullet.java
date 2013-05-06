@@ -22,6 +22,7 @@ public class Bullet extends GameObjectImp {
 	private LinkedList<Vector3f> oldPos;
 	private LinkedList<Vector2f> oldDir;
 	private int count;
+	private int team;
 
 	public Bullet() {
 		super();
@@ -31,6 +32,7 @@ public class Bullet extends GameObjectImp {
 		base.getPhys().setMaxvel(10f);
 		base.getPhys().setMaxaccel(10.0f);
 		base.getPhys().setRadius(.15f);
+		team = 2;
 
 
 		oldPos = new LinkedList<Vector3f>();
@@ -101,6 +103,8 @@ public class Bullet extends GameObjectImp {
 	@Override
 	public void doCollision(CollisionResult c) {
 		GameObject colWith = c.getCollided();
+		if(colWith == Gamestate.getInstance().getPlayer())
+			Gamestate.getInstance().reset();
 		if(colWith instanceof Tank){
 			int health = ((Tank) colWith).getHealth();
 			health--;
@@ -113,6 +117,16 @@ public class Bullet extends GameObjectImp {
 		}
 		Gamestate.getInstance().removeObject(this);
 		
+	}
+
+	@Override
+	public int getTeam() {
+		return team;
+	}
+
+	@Override
+	public void setTeam(int i) {
+		team = i;
 	}
 
 }

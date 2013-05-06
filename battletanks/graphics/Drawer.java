@@ -201,20 +201,23 @@ public class Drawer {
 
 	    // draw HUD
 	    // aiming reticle
-		gl.glBegin(gl.GL_LINE_LOOP);
+		gl.glBegin(gl.GL_LINES);
 		gl.glColor3f(1, 0, 0);
-		gl.glVertex2d(lx, lh);
-		gl.glVertex2d(rx, lh);
-		gl.glVertex2d(rx, rh);
-		gl.glVertex2d(lx, rh);
+		gl.glVertex2f(lx, lh);
+		gl.glVertex2f(rx, rh);
+		gl.glEnd();
+		gl.glBegin(gl.GL_LINES);
+		gl.glColor3f(1, 0, 0);
+		gl.glVertex2f(lx, rh);
+		gl.glVertex2f(rx, lh);
 		gl.glEnd();
 		// firing status
 		gl.glBegin(gl.GL_LINE_LOOP);
 		gl.glColor3f(1, 0, 0);
-		gl.glVertex2d(width - 200, height - 50);
-		gl.glVertex2d(width - 10, height - 50);
-		gl.glVertex2d(width - 10, height - 10);
-		gl.glVertex2d(width - 200, height - 10);
+		gl.glVertex2d(rx + 20, lh - 45);
+		gl.glVertex2d(rx + 60, lh - 45);
+		gl.glVertex2d(rx + 60, lh + 135);
+		gl.glVertex2d(rx + 20, lh + 135);
 		gl.glEnd();
 		Tank player = (Tank)Gamestate.getInstance().getPlayer();
 		float per = player.getReloadPer();
@@ -222,11 +225,11 @@ public class Drawer {
 		gl.glEnable( gl.GL_BLEND );
 		gl.glBlendFunc( gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA );
 		gl.glBegin(gl.GL_QUADS);
-		gl.glColor4f(1, 0, 0, .5f);
-		gl.glVertex2f(width - 200, height - 10);
-		gl.glVertex2f(width - 200 + (per * 190.0f), height - 10);		
-		gl.glVertex2f(width - 200 + (per * 190.0f), height - 50);
-		gl.glVertex2f(width - 200, height - 50);
+		gl.glColor4f(1, 0, 0, .3f);
+		gl.glVertex2f(rx + 20, lh + 135);
+		gl.glVertex2f(rx + 60, lh + 135);		
+		gl.glVertex2f(rx + 60, lh + 135 - (per * 180.f));
+		gl.glVertex2f(rx + 20, lh + 135 - (per * 180.f));
 		gl.glEnd();
 		// player health status
 		int hp = player.getHealth();

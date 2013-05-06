@@ -16,6 +16,8 @@ public interface GameObject {
 	public Part getBase();
 	void setController(Controller c);
 	public void doCollision(CollisionResult c);
+	public int getTeam();
+	public void setTeam(int i);
 	
 	
 
