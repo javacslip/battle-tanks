@@ -130,7 +130,7 @@ public class Drawer {
 
 	private void DrawBackground() {
 		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
-		gl.glColor3f(.2f, .2f, .2f);
+		gl.glColor3f(.13f, .13f, .13f);
 		gl.glPushMatrix();
 		gl.glBegin(GL2.GL_QUADS);
 		gl.glVertex3f(-500.0f, -0.321f, -500.0f);

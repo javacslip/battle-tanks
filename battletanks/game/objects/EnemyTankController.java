@@ -59,7 +59,11 @@ public class EnemyTankController implements Controller {
 
 		}
 		
-		if (((double) (count - lastaction) / 3000) > rand) {
+		Vector2f ppos = new Vector2f(pos);
+		ppos.sub(playerpos);
+		float pdist = ppos.length();
+		
+		if ((((double) (count - lastaction) / 3000) + pdist/50f) > rand && pdist < 35 && count - lastaction > 100 ) {
 			firetarget = new Vector2f(playerpos.x + (float) Math.random() * 1f
 					- .5f, playerpos.y + (float) Math.random() * 1f - .5f);
 			Logger.getInstance().Log("New Fire Action:" + firetarget);
@@ -70,22 +74,24 @@ public class EnemyTankController implements Controller {
 		
 		
 		if (firetarget != null) {
-
+			if(count - lastaction > 100){
 			firetarget = new Vector2f(playerpos.x + (float) Math.random() * 1f
 					- .5f, playerpos.y + (float) Math.random() * 1f - .5f);
+			lastaction = count;
+			}
 
 			Vector2f tmp = new Vector2f(pos);
 			tmp.sub(firetarget);
 			float dist = tmp.length();
 
-			if (dist > 25) {
+			if (dist > 30) {
 				firetarget = null;
 			} else {
 
 				boolean t1 = turretfacepos(firetarget, 2.0f);
 				boolean t2 = facepos(firetarget, 35f);
 
-				if (dist > 5) {
+				if (dist > 8 && count % 4 == 0) {
 					controlled.moveForward();
 				}
 
@@ -104,11 +110,16 @@ public class EnemyTankController implements Controller {
 			tmp.sub(movetarget);
 			float dist = tmp.length();
 
-			facepos(movetarget, 3.5f);
+			boolean t1 = facepos(movetarget, 1.5f);
 
-			if (dist > 3f) {
+			if (dist > 10f) {
 				controlled.moveForward();
-			} else {
+				
+			}
+			else if(dist >2.5 && (count % 5 == 0) || t1 == true){
+				controlled.moveForward();
+			}
+			else {
 				movetarget = null;
 				Logger.getInstance().Log("Arrived:");
 			}
