@@ -101,6 +101,7 @@ public class Bullet extends GameObjectImp {
 
 	@Override
 	public void doCollision(CollisionResult c) {
+		if(this.getTeam() != c.collidedWith.getTeam())
 		Gamestate.getInstance().removeObject(this);
 		
 	}

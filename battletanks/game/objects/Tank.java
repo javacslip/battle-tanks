@@ -45,6 +45,13 @@ public class Tank extends GameObjectImp {
 
 	public void update(long dtime) {
 		super.update(dtime);
+		if(this.health == 0){
+			if(this == Gamestate.getInstance().getPlayer()){
+				Gamestate.getInstance().reset();
+			}
+			Gamestate.getInstance().removeObject(this);
+		}
+		else{
 		lastFired++;
 		Vector2f lookdir = turret.getPhys().getDir();
 		if (lookdir.y > 25.0f)
@@ -58,6 +65,7 @@ public class Tank extends GameObjectImp {
 			lookdir.x = -45.0f;
 
 		turret.getPhys().setDir(lookdir);
+		}
 
 	}
 	
@@ -149,16 +157,14 @@ public class Tank extends GameObjectImp {
 
 	@Override
 	public void doCollision(CollisionResult c) {
-		Logger.getInstance().Log("collision call");
 		if (c.collidedWith instanceof Obstacle || c.collidedWith instanceof Tank) {
-			Logger.getInstance().Log(c.collidedWith.toString());
 			Vector3f tank = new Vector3f(this.base.getPos());
 			tank.sub(c.overlap);
 			tank.y = 0;
 			this.base.getPhys().setPos(tank);
 		}
 		else if(c.collidedWith instanceof Bullet){
-			Logger.getInstance().Log("bullet");
+			if(c.collidedWith.getTeam() != this.getTeam())
 			this.health--;
 		}
 		
