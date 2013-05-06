@@ -117,6 +117,7 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 			renderer.beginRendering(drawable.getWidth(), drawable.getHeight());
 			renderer.setColor(1.0f, 0.2f, 0.2f, 1f);
 			Logger.getInstance().display(renderer);
+			draw.drawUIText(renderer);
 			renderer.endRendering();
 		}
 

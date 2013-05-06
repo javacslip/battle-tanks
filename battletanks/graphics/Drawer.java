@@ -228,8 +228,8 @@ public class Drawer {
 		gl.glEnd();
 		// player health status
 		int hp = player.getHealth();
-		float startX = 10f;
-		float startY = 10f;
+		float startX = 30f;
+		float startY = 30f;
 		for(int i = 0; i < hp; i++){
 			gl.glBegin(gl.GL_QUADS);
 			gl.glColor3f(1, 0, 0);
@@ -360,6 +360,12 @@ public class Drawer {
 	
 	public boolean getShowBoundSphere(){
 		return showBoundSphere;
+	}
+	
+	public void drawUIText(TextRenderer renderer){
+		renderer.draw("HEALTH", 30, height - 25);
+		renderer.draw("WAVE: " + Gamestate.getInstance().getWave(), width - 200, height - 25);
+		renderer.draw("ENEMIES LEFT: " + Gamestate.getInstance().getTankCount(), width - 125, height - 25);
 	}
 
 	public void resize(int width, int height) {

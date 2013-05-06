@@ -50,6 +50,7 @@ public class Tank extends GameObjectImp {
 				Gamestate.getInstance().reset();
 			}
 			Gamestate.getInstance().setTankCount(Gamestate.getInstance().getTankCount() - 1);
+			
 			Gamestate.getInstance().removeObject(this);
 
 		}

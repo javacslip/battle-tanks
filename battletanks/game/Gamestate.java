@@ -1,11 +1,15 @@
 package battletanks.game;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
 import javax.vecmath.Vector3f;
+
+import com.sun.opengl.util.awt.TextRenderer;
 
 
 import battletanks.game.objects.EnemyTankController;
@@ -27,8 +31,11 @@ public class Gamestate {
 	
 	private GameObject player;
 	
+	private TextRenderer textRender;
+	
 	private int startTankCount;
 	private int tankCount;
+	private int wave;
 	
 	private List<GameInput> playerInput;
 
@@ -47,7 +54,13 @@ public class Gamestate {
 		playerInput = new ArrayList<GameInput>();
 		startTankCount = 1;
 		tankCount = 1;
+		wave = 0;
+		textRender = new TextRenderer(new Font("Dialog", Font.BOLD, 12));
 		setUpMap();
+	}
+	
+	public int getWave(){
+		return wave;
 	}
 	
 	public int getTankCount(){
@@ -351,7 +364,7 @@ public class Gamestate {
 			addObject(ob);
 		}
 		// enemy tanks
-		for(int i = 0; i < tankCount; i++){
+		for(int i = 0; i < startTankCount; i++){
 			et = new Tank();
 			et.setController(new EnemyTankController(et));
 			et.getBase().getPhys().setPos(rf.nextFloat() * 20 - 25, 0f, rf.nextFloat() * 20 - 15);
@@ -365,11 +378,12 @@ public class Gamestate {
 		player.setTeam(1);
 		((Tank)player).setHealth(3);
 		
+		wave++;
+		
+		
 	}
 	
 	public void reset(){
-		tankCount = 1;
-		startTankCount = 1;
 		Gamestate.instance = null;
 	}
 	
