@@ -369,7 +369,10 @@ public class Gamestate {
 		for(int i = 0; i < tankCount; i++){
 			et = new Tank();
 			et.setController(new EnemyTankController(et));
-			et.getBase().getPhys().setPos(rf.nextFloat() * 20 - 25, 0f, rf.nextFloat() * 20 - 15);
+			do{
+				pos = new Vector3f(rf.nextFloat() * 40f - 20f, 0f, rf.nextFloat() * 40f - 20f);
+			}while(pos.length() < 15);
+			et.getBase().getPhys().setPos(pos);
 			et.getBase().getPhys().setDir( rf.nextFloat() * 180,0);
 			et.setTeam(2);
 			addObject(et);
