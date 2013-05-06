@@ -103,10 +103,14 @@ public class Bullet extends GameObjectImp {
 	@Override
 	public void doCollision(CollisionResult c) {
 		GameObject colWith = c.getCollided();
-		if(colWith == Gamestate.getInstance().getPlayer())
-			Gamestate.getInstance().reset();
-		if(colWith instanceof Tank){
-			int health = ((Tank) colWith).getHealth();
+		int health = ((Tank) colWith).getHealth();
+		if(colWith == Gamestate.getInstance().getPlayer()){
+			health--;
+			if(health == 0){
+				Gamestate.getInstance().reset();
+			}
+		}
+		else if(colWith instanceof Tank){
 			health--;
 			if(health == 0){
 				Gamestate.getInstance().removeObject(colWith);

@@ -243,7 +243,17 @@ public class Gamestate {
 		boolean hit = false;
 		cr = new CollisionResult();
 		for(GameObject go : bullets){
-
+			x = go.getBase().getPhys().getPos().x - player.getBase().getPhys().getPos().x;
+			y = go.getBase().getPhys().getPos().y - player.getBase().getPhys().getPos().y;
+			z = go.getBase().getPhys().getPos().z - player.getBase().getPhys().getPos().z;
+			d = (float) Math.sqrt(x*x + y*y + z*z);
+			if(d < (go.getBase().getPhys().getRadius() + player.getBase().getPhys().getRadius())){
+				if (go.getTeam() != player.getTeam()) {
+					cr.setCollided(player);
+					go.doCollision(cr);
+					break;
+				}
+			}
 			for(GameObject et : tanks){
 				x = go.getBase().getPhys().getPos().x - et.getBase().getPhys().getPos().x;
 				y = go.getBase().getPhys().getPos().y - et.getBase().getPhys().getPos().y;
@@ -289,11 +299,12 @@ public class Gamestate {
 			addObject(ob);
 		}
 		// enemy tanks
-		for(int i = 0; i < 10; i++){
+		for(int i = 0; i < 1; i++){
 			et = new Tank();
 			et.setController(new EnemyTankController(et));
 			et.getBase().getPhys().setPos(rf.nextFloat() * 20 - 10, 0f, rf.nextFloat() * 20 - 10);
 			et.getBase().getPhys().setDir( rf.nextFloat() * 180,0);
+			et.setTeam(2);
 			addObject(et);
 		}
 		// player
