@@ -32,7 +32,6 @@ public class Bullet extends GameObjectImp {
 		base.getPhys().setMaxvel(10f);
 		base.getPhys().setMaxaccel(10.0f);
 		base.getPhys().setRadius(.15f);
-		team = 2;
 
 
 		oldPos = new LinkedList<Vector3f>();
@@ -102,23 +101,6 @@ public class Bullet extends GameObjectImp {
 
 	@Override
 	public void doCollision(CollisionResult c) {
-		GameObject colWith = c.getCollided();
-		int health = ((Tank) colWith).getHealth();
-		if(colWith == Gamestate.getInstance().getPlayer()){
-			health--;
-			if(health == 0){
-				Gamestate.getInstance().reset();
-			}
-		}
-		else if(colWith instanceof Tank){
-			health--;
-			if(health == 0){
-				Gamestate.getInstance().removeObject(colWith);
-			}
-			else{
-				((Tank) colWith).setHealth(health);
-			}
-		}
 		Gamestate.getInstance().removeObject(this);
 		
 	}
