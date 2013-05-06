@@ -49,8 +49,7 @@ public class Tank extends GameObjectImp {
 			if(this == Gamestate.getInstance().getPlayer()){
 				Gamestate.getInstance().reset();
 			}
-			Gamestate.getInstance().setTankCount(Gamestate.getInstance().getTankCount() - 1);
-			
+
 			Gamestate.getInstance().removeObject(this);
 
 		}

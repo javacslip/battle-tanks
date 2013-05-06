@@ -31,18 +31,16 @@ public class Gamestate {
 	
 	private GameObject player;
 	
-	private TextRenderer textRender;
-	
-	private int startTankCount;
-	private int tankCount;
-	private int wave;
+	private static int startTankCount = 1;
+	private int tankCount, wave;
 	
 	private List<GameInput> playerInput;
 
 	
 	long lasttime;
 	
-	private Gamestate(){
+	private Gamestate(int wave){
+		this.wave = wave;
 		removelist = new ArrayList<GameObject>();
 		lasttime = System.currentTimeMillis();
 		obstacles = new ArrayList<GameObject>();
@@ -52,24 +50,13 @@ public class Gamestate {
 		player = new Tank();
 		player.setController(new PlayerTankController((Tank) player));
 		playerInput = new ArrayList<GameInput>();
-		startTankCount = 1;
-		tankCount = 1;
-		wave = 0;
-		textRender = new TextRenderer(new Font("Dialog", Font.BOLD, 12));
+		tankCount = 1; 
+		for (int i = 1; i < wave; i++)
+			tankCount = tankCount * 2;
+		
 		setUpMap();
 	}
 	
-	public int getWave(){
-		return wave;
-	}
-	
-	public int getTankCount(){
-		return tankCount;
-	}
-	
-	public void setTankCount(int i){
-		tankCount = i;
-	}
 	
 	public void addObject(GameObject o){
 		if(o instanceof Obstacle){
@@ -132,6 +119,9 @@ public class Gamestate {
 	}
 	
 	public void UpdateState(long dtime) {
+		
+		
+		
 		int i;
 		for (GameObject o : removelist) {
 			if (o instanceof Obstacle) {
@@ -340,10 +330,8 @@ public class Gamestate {
 			}
 		}
 		
-		if(tankCount == 0){
-			startTankCount = startTankCount * 2;
-			tankCount = startTankCount;
-			setUpMap();
+		if(tanks.size() == 0){
+			nextWave();
 		}
 
 	}
@@ -356,10 +344,26 @@ public class Gamestate {
 		Tank et;
 		Random rf = new Random(System.nanoTime());
 		// obstacles
-		for(int i = 0; i < 12; i++){
+		Vector3f tmp, pos;
+		boolean foundspot;
+		obstacles.clear();
+		for(int i = 0; i < 52; i++){
 			ob = new Obstacle();
-			ob.getBase().getPhys().setPos(rf.nextFloat() * 20 - 19, .35f, rf.nextFloat() * 20 - 7);
-			ob.getBase().getPhys().setDir(0, rf.nextFloat() * 180);
+			do{
+				foundspot = true;
+				pos = new Vector3f(rf.nextFloat() * 50f - 25f, .35f, rf.nextFloat() * 50f - 25f);
+				for(GameObject o : obstacles){
+					tmp = new Vector3f(o.getBase().getPos());
+					tmp.sub(pos);
+					if(tmp.length() < 5){
+						foundspot = false;
+					}
+				}
+			}
+			while(!foundspot);
+			
+			ob.getBase().getPhys().setPos(pos);
+			ob.getBase().getPhys().setDir(0, rf.nextFloat() * 180f);
 			ob.setTeam(3);
 			addObject(ob);
 		}
@@ -383,15 +387,22 @@ public class Gamestate {
 		
 	}
 	
+	public void nextWave(){
+		Gamestate.instance = new Gamestate(wave + 1);
+			
+	
+	}
+	
 	public void reset(){
-		Gamestate.instance = null;
+		Gamestate.instance = new Gamestate(startTankCount);
+
 	}
 	
 	private static Gamestate instance = null;
 	
 	public static Gamestate getInstance(){
 		if (Gamestate.instance == null)
-			Gamestate.instance = new Gamestate();
+			Gamestate.instance = new Gamestate(startTankCount);
 		
 		return Gamestate.instance;
 	}
