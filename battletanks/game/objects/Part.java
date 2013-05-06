@@ -21,6 +21,9 @@ public class Part{
 	private PhysObject part;
 	
 	private Vector3f centerrot;
+
+
+	private float scale;
 	private Vector3f pos;
 	private Vector2f dir;
 	
@@ -30,6 +33,7 @@ public class Part{
 		rotJoined = null;
 		posJoined = null;
 		centerrot = new Vector3f(0,0,0);
+		scale = 1.0f;
 		part = new PhysObject();
 	}
 	
@@ -39,6 +43,14 @@ public class Part{
 
 	public void setCenterrot(Vector3f centerrot) {
 		this.centerrot = centerrot;
+	}
+	
+	public float getScale() {
+		return scale;
+	}
+
+	public void setScale(float scale) {
+		this.scale = scale;
 	}
 	
 	public Vector3f getPos(){
