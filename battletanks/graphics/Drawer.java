@@ -216,7 +216,6 @@ public class Drawer {
 		gl.glEnd();
 		Tank player = (Tank)Gamestate.getInstance().getPlayer();
 		float per = player.getReloadPer();
-		System.out.println(per);
 		gl.glEnable( gl.GL_BLEND );
 		gl.glBlendFunc( gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA );
 		gl.glBegin(gl.GL_QUADS);

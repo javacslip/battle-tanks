@@ -13,6 +13,7 @@ import battletanks.game.CollisionResult;
 import battletanks.game.Gamestate;
 import battletanks.game.Logger;
 import battletanks.graphics.MODELS;
+import battletanks.graphics.SOUNDS;
 
 public class Bullet extends GameObjectImp {
 
@@ -104,6 +105,7 @@ public class Bullet extends GameObjectImp {
 		bpos.sub(this.getBase().getPhys().getVel());
 		Gamestate.getInstance().addObject(new ExplosionCluster(bpos));
 		Gamestate.getInstance().removeObject(this);
+		SOUNDS.BULLET_HIT.play();
 	}
 
 	@Override

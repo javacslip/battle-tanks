@@ -6,6 +6,7 @@ import java.awt.event.*;
 
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.JFrame;
 
 import battletanks.game.GameInput;
@@ -13,6 +14,8 @@ import battletanks.game.Gamestate;
 import battletanks.game.INPUT_TYPE;
 import battletanks.game.Logger;
 import battletanks.graphics.Drawer;
+import battletanks.graphics.SOUNDS;
+
 import java.awt.Image;
 
 import java.awt.Frame;
@@ -41,6 +44,7 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 	private long time = System.nanoTime();
 	TextRenderer renderer;
 	Robot robot;
+	SOUNDS sfx;
 
 	public static void main(String args[]) {
 		new TanksMain();
@@ -91,7 +95,6 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 			
 			e.printStackTrace();
 		}
-
 	}
 
 	// gl display function

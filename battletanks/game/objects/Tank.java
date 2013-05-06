@@ -11,6 +11,7 @@ import battletanks.game.CollisionResult;
 import battletanks.game.Gamestate;
 import battletanks.game.Logger;
 import battletanks.graphics.MODELS;
+import battletanks.graphics.SOUNDS;
 
 public class Tank extends GameObjectImp {
 
@@ -51,6 +52,7 @@ public class Tank extends GameObjectImp {
 			}
 
 			Gamestate.getInstance().removeObject(this);
+			SOUNDS.TANK_EXPLODE.play();
 
 		}
 		else{
@@ -86,6 +88,7 @@ public class Tank extends GameObjectImp {
 	public boolean fire(){
 		
 		if(lastFired > fireRate){
+			SOUNDS.FIRE_GUN.play();
 			Bullet b = new Bullet();
 			b.setTeam(this.getTeam());
 			Gamestate.getInstance().addObject(b);

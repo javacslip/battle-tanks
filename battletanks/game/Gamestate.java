@@ -368,7 +368,7 @@ public class Gamestate {
 			addObject(ob);
 		}
 		// enemy tanks
-		for(int i = 0; i < startTankCount; i++){
+		for(int i = 0; i < tankCount; i++){
 			et = new Tank();
 			et.setController(new EnemyTankController(et));
 			et.getBase().getPhys().setPos(rf.nextFloat() * 20 - 25, 0f, rf.nextFloat() * 20 - 15);
@@ -382,15 +382,19 @@ public class Gamestate {
 		player.setTeam(1);
 		((Tank)player).setHealth(3);
 		
-		wave++;
-		
 		
 	}
 	
 	public void nextWave(){
 		Gamestate.instance = new Gamestate(wave + 1);
-			
+	}
 	
+	public int getWave(){
+		return wave;
+	}
+	
+	public int getTankCount(){
+		return tankCount;
 	}
 	
 	public void reset(){
