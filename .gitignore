@@ -1,7 +1,9 @@
 *.class
 
 # Package Files #
-lib
+lib32
 *.war
 *.ear
 *.classpath
+lib64
+build

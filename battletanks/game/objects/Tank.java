@@ -68,10 +68,10 @@ public class Tank extends GameObjectImp {
 		if (lookdir.y < -25.0f)
 			lookdir.y = -25.0f;
 
-		if (lookdir.x > 45.0f)
-			lookdir.x = 45.0f;
-		if (lookdir.x < -45.0f)
-			lookdir.x = -45.0f;
+		if (lookdir.x > 55.0f)
+			lookdir.x = 55.0f;
+		if (lookdir.x < -55.0f)
+			lookdir.x = -55.0f;
 
 		turret.getPhys().setDir(lookdir);
 		}
