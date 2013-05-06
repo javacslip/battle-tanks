@@ -166,6 +166,7 @@ public class Gamestate {
 					max.y = r.getOverlapVector().y;
 				}
 			}
+			tankObjCol.clear();
 			CollisionResult c = new CollisionResult();
 			c.setVector(max);
 			go.doCollision(c);
@@ -269,11 +270,12 @@ public class Gamestate {
 			addObject(ob);
 		}
 		// enemy tanks
-		for(int i = 0; i < 6; i++){
+		for(int i = 0; i < 10; i++){
 			et = new Tank();
 			et.setController(new EnemyTankController(et));
 			et.getBase().getPhys().setPos(rf.nextFloat() * 20 - 10, 0f, rf.nextFloat() * 20 - 10);
-			et.getBase().getPhys().setDir(0,0);
+	
+			et.getBase().getPhys().setDir( rf.nextFloat() * 180,0);
 			addObject(et);
 		}
 		// player
