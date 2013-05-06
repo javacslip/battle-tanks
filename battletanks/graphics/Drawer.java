@@ -228,12 +228,17 @@ public class Drawer {
 		gl.glEnd();
 		// player health status
 		int hp = player.getHealth();
-		float startX;
-		float startY;
+		float startX = 10f;
+		float startY = 10f;
 		for(int i = 0; i < hp; i++){
-			gl.glBegin(gl.GL_LINE_LOOP);
+			gl.glBegin(gl.GL_QUADS);
 			gl.glColor3f(1, 0, 0);
+			gl.glVertex2f(startX, startY + 30);
+			gl.glVertex2f(startX + 30, startY + 30);
+			gl.glVertex2f(startX + 30, startY);
+			gl.glVertex2f(startX, startY);
 			gl.glEnd();
+			startX+=40;
 		}
 	    
 		// set up 3d drawing

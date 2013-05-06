@@ -27,6 +27,9 @@ public class Gamestate {
 	
 	private GameObject player;
 	
+	private int startTankCount;
+	private int tankCount;
+	
 	private List<GameInput> playerInput;
 
 	
@@ -42,7 +45,17 @@ public class Gamestate {
 		player = new Tank();
 		player.setController(new PlayerTankController((Tank) player));
 		playerInput = new ArrayList<GameInput>();
+		startTankCount = 1;
+		tankCount = 1;
 		setUpMap();
+	}
+	
+	public int getTankCount(){
+		return tankCount;
+	}
+	
+	public void setTankCount(int i){
+		tankCount = i;
 	}
 	
 	public void addObject(GameObject o){
@@ -314,6 +327,11 @@ public class Gamestate {
 			}
 		}
 		
+		if(tankCount == 0){
+			startTankCount = startTankCount * 2;
+			tankCount = startTankCount;
+			setUpMap();
+		}
 
 	}
 	
@@ -325,28 +343,33 @@ public class Gamestate {
 		Tank et;
 		Random rf = new Random(System.nanoTime());
 		// obstacles
-		for(int i = 0; i < 15; i++){
+		for(int i = 0; i < 12; i++){
 			ob = new Obstacle();
-			ob.getBase().getPhys().setPos(rf.nextFloat() * 20 - 10, .35f, rf.nextFloat() * 20 - 10);
+			ob.getBase().getPhys().setPos(rf.nextFloat() * 20 - 19, .35f, rf.nextFloat() * 20 - 7);
 			ob.getBase().getPhys().setDir(0, rf.nextFloat() * 180);
+			ob.setTeam(3);
 			addObject(ob);
 		}
 		// enemy tanks
-		for(int i = 0; i < 1; i++){
+		for(int i = 0; i < tankCount; i++){
 			et = new Tank();
 			et.setController(new EnemyTankController(et));
-			et.getBase().getPhys().setPos(rf.nextFloat() * 20 - 10, 0f, rf.nextFloat() * 20 - 10);
+			et.getBase().getPhys().setPos(rf.nextFloat() * 20 - 25, 0f, rf.nextFloat() * 20 - 15);
 			et.getBase().getPhys().setDir( rf.nextFloat() * 180,0);
+			et.setTeam(2);
 			addObject(et);
 		}
 		// player
 		player.getBase().getPhys().setPos(0, 0, 0);
 		player.getBase().getPhys().setDir(0, 0);
 		player.setTeam(1);
+		((Tank)player).setHealth(3);
 		
 	}
 	
 	public void reset(){
+		tankCount = 1;
+		startTankCount = 1;
 		Gamestate.instance = null;
 	}
 	
