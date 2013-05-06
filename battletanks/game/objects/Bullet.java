@@ -74,8 +74,8 @@ public class Bullet extends GameObjectImp {
 
 		//Logger.getInstance().Log("bulletpos:" + this.base.getPhys().getPos());
 		this.base.getPhys().setAccel(gravity);
-		if (this.base.getPos().y < -.5) {
-			Gamestate.getInstance().removeObject(this);
+		if (this.base.getPos().y < -.321f) {
+			explode();
 		}
 		
 		
@@ -98,11 +98,19 @@ public class Bullet extends GameObjectImp {
 		oldDir.add(new Vector2f(this.base.getPhys().getDir()));
 
 	}
+	
+	private void explode(){
+		Vector3f bpos = new Vector3f(this.getBase().getPos());
+		bpos.sub(this.getBase().getPhys().getVel());
+		Gamestate.getInstance().addObject(new ExplosionCluster(bpos));
+		Gamestate.getInstance().removeObject(this);
+	}
 
 	@Override
 	public void doCollision(CollisionResult c) {
-		if(this.getTeam() != c.collidedWith.getTeam())
-		Gamestate.getInstance().removeObject(this);
+		if(this.getTeam() != c.collidedWith.getTeam()){
+			explode();
+		}
 		
 	}
 

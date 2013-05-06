@@ -19,6 +19,8 @@ import battletanks.TanksMain;
 import battletanks.game.Gamestate;
 import battletanks.game.Logger;
 import battletanks.game.objects.Bullet;
+import battletanks.game.objects.ExplosionCluster;
+import battletanks.game.objects.ExplosionPoint;
 import battletanks.game.objects.GameObject;
 import battletanks.game.objects.Part;
 import battletanks.game.objects.Tank;
@@ -44,7 +46,7 @@ public class Drawer {
 		height = 900;
 
 		znear = 0.01f;
-		zfar = 1000.f;
+		zfar = 900.0f;
 		
 		showBoundSphere = false;
 
@@ -93,6 +95,7 @@ public class Drawer {
 		
 
 
+		
 
 		for (GameObject ob : Gamestate.getInstance().getTanks()) {
 			Tank t = (Tank)ob;
@@ -120,48 +123,40 @@ public class Drawer {
 		}
 		
 		
-		if (color == null)
-			gl.glColor3f(0.0F, 1F, 1F);
-		else
-			gl.glColor3f(color.x, color.y, color.z);
-		for (GameObject ob : Gamestate.getInstance().getBullets()) {
-			Bullet b = (Bullet)ob;
-			Iterator<Vector3f> it = b.getOldPos();
-			Iterator<Vector2f> id = b.getOldDir();
-			int c = 0;
-			
-			while (c < 25 && it.hasNext()) {
-				c++;
-				Vector3f p = it.next();
-				Vector2f d = id.next();
-				gl.glPushMatrix();
-				gl.glTranslatef(p.x, p.y, p.z);
-				
-				gl.glRotatef(270, 0, 1, 0f);
-				
-				gl.glRotatef(-d.x, 0, 1.0f, 0f);
-				gl.glRotatef(d.y, 0.0f,0 , 1);
-				
-				gl.glRotatef(90, 0, 1, 0f);
-				ob.getBase().getModel().Draw(gl);
-				if(showBoundSphere)
-					glut.glutSolidSphere(ob.getBase().getPhys().getRadius(), 5, 5);
-				gl.glPopMatrix();
-			}
-		}
+
 
 		gl.glPopMatrix();
 	}
 
 	private void DrawBackground() {
-		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_LINE);
-		gl.glColor3f(0, 1, 0);
+		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
+		gl.glColor3f(.2f, .2f, .2f);
 		gl.glPushMatrix();
 		gl.glBegin(GL2.GL_QUADS);
-		gl.glVertex3f(500.0f, -0.5f, -500.0f);
-		gl.glVertex3f(-500.0f, -0.5f, -500.0f);
-		gl.glVertex3f(-500.0f, -0.5f, 500.0f);
-		gl.glVertex3f(500.0f, -0.5f, 500.0f);
+		gl.glVertex3f(-500.0f, -0.321f, -500.0f);
+		gl.glVertex3f(-500.0f, -0.321f, 500.0f);
+		gl.glVertex3f(500.0f, -0.321f, 500.0f);
+		gl.glVertex3f(500.0f, -0.321f, -500.0f);
+
+		gl.glEnd();
+
+		
+		gl.glEnable(GL.GL_POLYGON_OFFSET_FILL);
+		gl.glPolygonOffset(1, 1);
+		
+		
+		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_LINE);
+		gl.glColor3f(0f, 1f, 0f);
+
+		gl.glBegin(GL2.GL_QUADS);
+		gl.glVertex3f(-500.0f, -0.321f, -500.0f);
+		gl.glVertex3f(-500.0f, -0.321f, 500.0f);
+		gl.glVertex3f(500.0f, -0.321f, 500.0f);
+		gl.glVertex3f(500.0f, -0.321f, -500.0f);
+
+
+
+
 		gl.glEnd();
 		gl.glPopMatrix();
 
@@ -258,6 +253,7 @@ public class Drawer {
 
 		gl.glLoadIdentity();
 		gl.glPushMatrix();
+		
 
 		Tank player = (Tank) Gamestate.getInstance().getPlayer();
 
@@ -276,9 +272,18 @@ public class Drawer {
 		gl.glEnable(GL.GL_POLYGON_OFFSET_FILL);
 		gl.glPolygonOffset(1, 1);
 		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_LINE);
+		
+		
 		DrawGeometry(null);
+		DrawLineGeometry();
 
 		gl.glPopMatrix();
+		
+
+		
+		
+		
+
 
 		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_FILL);
 
@@ -286,6 +291,64 @@ public class Drawer {
 
 	}
 	
+	private void DrawLineGeometry() {
+		
+
+			gl.glColor3f(0.0F, 1F, 1F);
+
+		for (GameObject ob : Gamestate.getInstance().getBullets()) {
+			Bullet b = (Bullet)ob;
+			Iterator<Vector3f> it = b.getOldPos();
+			Iterator<Vector2f> id = b.getOldDir();
+			int c = 0;
+			
+			while (c < 25 && it.hasNext()) {
+				c++;
+				Vector3f p = it.next();
+				Vector2f d = id.next();
+				gl.glPushMatrix();
+				gl.glTranslatef(p.x, p.y, p.z);
+				
+				gl.glRotatef(270, 0, 1, 0f);
+				
+				gl.glRotatef(-d.x, 0, 1.0f, 0f);
+				gl.glRotatef(d.y, 0.0f,0 , 1);
+				
+				gl.glRotatef(90, 0, 1, 0f);
+				ob.getBase().getModel().Draw(gl);
+				if(showBoundSphere)
+					glut.glutSolidSphere(ob.getBase().getPhys().getRadius(), 5, 5);
+				gl.glPopMatrix();
+			}
+		}
+		
+		
+		for (GameObject ob : Gamestate.getInstance().getExplosions()) {
+			ExplosionCluster t = (ExplosionCluster)ob;
+			for (Part p : ob.getParts()) {
+				ExplosionPoint e = (ExplosionPoint)p;
+
+					gl.glColor3f(e.getColor().x,e.getColor().y, e.getColor().z);
+
+				
+				
+				gl.glPushMatrix();
+				gl.glTranslatef(e.getPos().x, e.getPos().y, e.getPos().z);
+				gl.glRotatef(270, 0, 1, 0f);
+				gl.glRotatef(-e.getDir().x, 0, 1.0f, 0f);
+				gl.glRotatef(e.getDir().y, 0.0f,0 , 1);
+
+				glut.glutSolidSphere(e.getScale(),20,20);
+				
+				
+				if(showBoundSphere)
+					glut.glutSolidSphere(p.getPhys().getRadius(),20,20);
+				gl.glPopMatrix();
+			}
+		}
+		
+	}
+
 	public void setShowBoundSphere(boolean value){
 		showBoundSphere = value;
 	}

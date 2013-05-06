@@ -16,23 +16,26 @@ public class ExplosionPoint extends Part{
 		super(m);
 		Random r = new Random();
 		
-		Vector3f pos = new Vector3f((float)r.nextFloat()-.5f, (float)r.nextFloat()-.5f, (float)r.nextFloat()-.5f);
-		Vector3f vel = new Vector3f((float)r.nextFloat()*.5f-.25f, (float)r.nextFloat()*.5f-.25f, (float)r.nextFloat()*.5f-.25f);
+		Vector3f pos = new Vector3f((float)r.nextFloat()*.4f-.2f, (float)r.nextFloat()*.4f-.2f, (float)r.nextFloat()*.4f-.2f);
+		Vector3f vel = new Vector3f((float)r.nextFloat()*.3f-.15f, (float)r.nextFloat()*.3f-.15f, (float)r.nextFloat()*.3f-.15f);
 		
 		this.getPhys().setPos(pos);
 		this.getPhys().setVel(vel);
-		this.setScale((float)r.nextFloat() * 2f+0.5f);
+		this.getPhys().setMaxrotvel(40f);
+		this.getPhys().setRotdragconst(0.0f);
+		this.getPhys().setDirSpeed(r.nextFloat()*20f, r.nextFloat()*20f);
+		this.setScale((float)r.nextFloat() * 0.2f+0.02f);
 		
 		smalltime = (int) r.nextFloat()*50;
-		speed = (int) r.nextFloat()*20;
-		color = new Vector3f(r.nextFloat(),r.nextFloat(),r.nextFloat());
+		speed = r.nextFloat()*0.004f+0.001f;
+		color = new Vector3f(0,r.nextFloat()*.9f + .1f,r.nextFloat()*.5f + .5f);
 		count = 0;
 	}
 	
 	public void update(long dtime){
 		count++;
 		super.update(dtime);
-		if(this.smalltime < count){
+		if(this.smalltime > count){
 			this.setScale(this.getScale() + speed);
 		}
 		else{

@@ -12,8 +12,9 @@ import battletanks.graphics.MODELS;
 public class ExplosionCluster extends GameObjectImp {
 	int count = 0;
 	
-	public ExplosionCluster(){
+	public ExplosionCluster(Vector3f pos){
 		Part explosion = new Part(MODELS.EXPLOSION);
+		explosion.getPhys().setPos(pos);
 		base = explosion;
 		
 
@@ -26,6 +27,7 @@ public class ExplosionCluster extends GameObjectImp {
 			
 			
 		}
+		this.base.update(10);
 		
 	}
 	
