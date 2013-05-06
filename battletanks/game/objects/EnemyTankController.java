@@ -113,10 +113,10 @@ public class EnemyTankController implements Controller {
 			boolean t1 = facepos(movetarget, 1.5f);
 			
 			if(tdir - dir > 0){
-				controlled.setLookImpulse((int) 2f, 0);
+				controlled.setLookImpulse((int) 10f, 0);
 			}
 			else{
-				controlled.setLookImpulse((int) -2f, 0);
+				controlled.setLookImpulse((int) -10f, 0);
 			}
 
 			if (dist > 10f) {
@@ -166,11 +166,11 @@ public class EnemyTankController implements Controller {
 		angle -= 90;
 
 		if (angle - tdir < -tolerance) {
-			controlled.setLookImpulse((int) 4f, 0);
+			controlled.setLookImpulse((int) 20f, 0);
 
 			return false;
 		} else if (angle - tdir > tolerance) {
-			controlled.setLookImpulse((int) -4f, 0);
+			controlled.setLookImpulse((int) -20f, 0);
 
 			return false;
 		}

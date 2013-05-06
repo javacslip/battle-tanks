@@ -151,7 +151,7 @@ public class Drawer {
 		
 		
 		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_LINE);
-		gl.glColor3f(0f, 1f, 0f);
+		gl.glColor3f(.7f, .7f, .7f);
 
 		gl.glBegin(GL2.GL_QUADS);
 		gl.glVertex3f(-500.0f, -0.321f, -500.0f);

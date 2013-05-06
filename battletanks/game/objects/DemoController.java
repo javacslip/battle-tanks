@@ -17,7 +17,7 @@ public class DemoController implements Controller {
 	public void update(long dtime) {
 		count ++;
 		
-		controlled.setLookImpulse((int)(Math.sin((double)count/50d) * 4d), 0);
+		controlled.setLookImpulse((int)(Math.sin((double)count/50d) * 10d), 0);
 		if(Math.random() > .5d && count % 160 == 0)
 			controlled.fire();
 

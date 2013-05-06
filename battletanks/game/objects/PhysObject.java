@@ -119,7 +119,7 @@ public class PhysObject {
 		
 		Vector2f tmprotdrag = new Vector2f(rotspeed);
 		tmprotdrag.scale(dtime);
-		tmprotdrag.scale(rotdragconst);
+		tmprotdrag.scale(rotdragconst );
 		rotspeed.sub(tmprotdrag);
 		
 

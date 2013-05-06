@@ -33,13 +33,14 @@ public class Gamestate {
 	private static int startTankCount = 0;
 	private int tankCount, wave;
 	private boolean roundover;
+	int alivecount;
 
 	private List<GameInput> playerInput;
 
 	long lasttime;
 
 	private Gamestate(int wave) {
-
+		alivecount =0;
 		this.wave = wave;
 		removelist = new ArrayList<GameObject>();
 		lasttime = System.currentTimeMillis();
@@ -165,11 +166,11 @@ public class Gamestate {
 			deltaTime = 500;
 		}
 
-		int alivecount = 0;
+		this.alivecount = 0;
 		for (GameObject go : tanks) {
 			go.update(deltaTime);
 			if (go.isDead() == false)
-				alivecount++;
+				this.alivecount++;
 
 		}
 
@@ -424,9 +425,9 @@ public class Gamestate {
 			et = new Tank();
 			et.setController(new EnemyTankController(et));
 			do {
-				pos = new Vector3f(rf.nextFloat() * 40f - 20f, 0f,
-						rf.nextFloat() * 40f - 20f);
-			} while (pos.length() < 15);
+				pos = new Vector3f(rf.nextFloat() * 80f - 40f, 0f,
+						rf.nextFloat() * 80f - 40f);
+			} while (pos.length() < 30);
 			et.getBase().getPhys().setPos(pos);
 			et.getBase().getPhys().setDir(rf.nextFloat() * 180, 0);
 			et.setTeam(2);
@@ -450,7 +451,7 @@ public class Gamestate {
 	}
 
 	public int getTankCount() {
-		return tankCount;
+		return alivecount;
 	}
 
 	public void reset() {

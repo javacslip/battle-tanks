@@ -17,7 +17,7 @@ public class Tank extends GameObjectImp {
 
 	private float accelConst = 0.02f;
 	private float rotRate = 1f;
-	private float turretRate = 7;
+	private float turretRate = 50;
 	private int fireRate = 35;
 	private int lastFired = 35;
 	private int health = 3;
@@ -161,7 +161,7 @@ public class Tank extends GameObjectImp {
 
 	public void setLookImpulse(int x, int y) {
 
-		turret.getPhys().setDirAccel(-((float) x) / turretRate,
+		turret.getPhys().setDirAccel(-((float)  x) / turretRate,
 				-((float) y) / turretRate);
 	}
 
