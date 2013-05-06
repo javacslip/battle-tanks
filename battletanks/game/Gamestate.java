@@ -289,7 +289,7 @@ public class Gamestate {
 			addObject(ob);
 		}
 		// enemy tanks
-		for(int i = 0; i < 10; i++){
+		for(int i = 0; i < 5; i++){
 			et = new Tank();
 			et.setController(new EnemyTankController(et));
 			et.getBase().getPhys().setPos(rf.nextFloat() * 20 - 10, 0f, rf.nextFloat() * 20 - 10);
