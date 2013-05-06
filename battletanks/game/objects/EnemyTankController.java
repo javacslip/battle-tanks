@@ -48,7 +48,7 @@ public class EnemyTankController implements Controller {
 
 		if (movetarget == null) {
 		
-			if (rand > .50d)
+			if (rand > .5d)
 				movetarget = new Vector2f((float) Math.random() * 40f - 20f,
 						(float) Math.random() * 40f - 20f);
 
@@ -59,7 +59,7 @@ public class EnemyTankController implements Controller {
 
 		}
 		
-		if (((double) (count - lastaction) / 3000) - 0.1d > rand) {
+		if (((double) (count - lastaction) / 3000) > rand) {
 			firetarget = new Vector2f(playerpos.x + (float) Math.random() * 1f
 					- .5f, playerpos.y + (float) Math.random() * 1f - .5f);
 			Logger.getInstance().Log("New Fire Action:" + firetarget);
@@ -78,7 +78,7 @@ public class EnemyTankController implements Controller {
 			tmp.sub(firetarget);
 			float dist = tmp.length();
 
-			if (dist > 20) {
+			if (dist > 25) {
 				firetarget = null;
 			} else {
 
@@ -104,9 +104,9 @@ public class EnemyTankController implements Controller {
 			tmp.sub(movetarget);
 			float dist = tmp.length();
 
-			facepos(movetarget, 2.5f);
+			facepos(movetarget, 3.5f);
 
-			if (dist > 1) {
+			if (dist > 3f) {
 				controlled.moveForward();
 			} else {
 				movetarget = null;
