@@ -23,6 +23,8 @@ public class Gamestate {
 	private List<GameObject> bullets;
 	
 	private GameObject player;
+	private int startTankCount;
+	private int tankCount;
 	
 	private List<GameInput> playerInput;
 
@@ -38,7 +40,13 @@ public class Gamestate {
 		player = new Tank();
 		player.setController(new PlayerTankController((Tank) player));
 		playerInput = new ArrayList<GameInput>();
+		startTankCount = 3;
+		tankCount = 3;
 		setUpMap();
+	}
+	
+	public void setTankCount(int i){
+		tankCount = i;
 	}
 	
 	public void addObject(GameObject o){
@@ -290,6 +298,7 @@ public class Gamestate {
 			}
 		}
 		
+		
 
 	}
 	
@@ -305,14 +314,16 @@ public class Gamestate {
 			ob = new Obstacle();
 			ob.getBase().getPhys().setPos(rf.nextFloat() * 20 - 10, .35f, rf.nextFloat() * 20 - 10);
 			ob.getBase().getPhys().setDir(0, rf.nextFloat() * 180);
+			ob.setTeam(3);
 			addObject(ob);
 		}
 		// enemy tanks
-		for(int i = 0; i < 1; i++){
+		for(int i = 0; i < tankCount; i++){
 			et = new Tank();
 			et.setController(new EnemyTankController(et));
 			et.getBase().getPhys().setPos(rf.nextFloat() * 20 - 10, 0f, rf.nextFloat() * 20 - 10);
 			et.getBase().getPhys().setDir( rf.nextFloat() * 180,0);
+			et.setTeam(2);
 			addObject(et);
 		}
 		// player
