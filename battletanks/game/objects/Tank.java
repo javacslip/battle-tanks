@@ -46,13 +46,18 @@ public class Tank extends GameObjectImp {
 
 	public void update(long dtime) {
 		super.update(dtime);
-		if(this.health == 0){
+		if(this.health == 0 && this.dead == false){
 			if(this == Gamestate.getInstance().getPlayer()){
 				Gamestate.getInstance().reset();
 			}
 
-			Gamestate.getInstance().removeObject(this);
 			SOUNDS.TANK_EXPLODE.play();
+			Vector3f bpos = new Vector3f(this.getBase().getPos());
+			Gamestate.getInstance().addObject(new ExplosionCluster(bpos,  new Vector3f(0,1.2f,0),20));
+			this.setController(new NoController());
+			this.dead = true;
+			this.base.unjoin(this.turret);
+			this.parts.remove(this.turret);
 
 		}
 		else{

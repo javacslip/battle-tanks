@@ -106,6 +106,10 @@ public class Part{
 		subparts.add(p);
 	}
 	
+	public void unjoin(Part p){
+		subparts.remove(p);
+	}
+	
 	public  void rotJoin(Part p){
 		p.joined(this);
 		this.rotJoined = p;

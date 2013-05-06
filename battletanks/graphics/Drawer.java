@@ -102,6 +102,9 @@ public class Drawer {
 			int hp = t.getHealth();
 			
 			if (color == null)
+				if(t.isDead() == true)
+					gl.glColor3f(.2f, .2F, .2F);
+				else
 				gl.glColor3f(hp * .2f +.4f, 0.0F, .0F);
 			else
 				gl.glColor3f(color.x, color.y, color.z);

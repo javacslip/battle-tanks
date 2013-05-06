@@ -12,15 +12,17 @@ import battletanks.graphics.MODELS;
 public class ExplosionCluster extends GameObjectImp {
 	int count = 0;
 	
-	public ExplosionCluster(Vector3f pos){
+	public ExplosionCluster(Vector3f pos, Vector3f vel, int size){
 		Part explosion = new Part(MODELS.EXPLOSION);
 		explosion.getPhys().setPos(pos);
+		explosion.getPhys().setVel(vel);
 		base = explosion;
 		
 
 		count = 0;
-		for(int i = (int) (Math.random()*10f+5f); i > 0; i--){
-			explosion = new ExplosionPoint(MODELS.EXPLOSION);
+		float scalar = size/10f; 
+		for(int i = (int) (Math.random()*size+5f); i > 0; i--){
+			explosion = new ExplosionPoint(MODELS.EXPLOSION, .15f * scalar , .4f * scalar,.3f * scalar, scalar);
 			count++;
 			explosion.posJoin(base);
 			this.parts.add(explosion);
@@ -28,6 +30,12 @@ public class ExplosionCluster extends GameObjectImp {
 			
 		}
 		this.base.update(10);
+		
+	}
+	
+	public ExplosionCluster(Vector3f pos){
+		this(pos,new Vector3f(0,0,0), 10);
+		
 		
 	}
 	
