@@ -8,10 +8,17 @@ public abstract class GameObjectImp implements GameObject {
 	protected Part base;
 	protected List<Part> parts;
 	protected Controller control;
+	protected boolean dead;
 	
 	public GameObjectImp(){
 		parts = new ArrayList<Part>();
 		control = new NoController();
+		dead = false;
+	}
+	
+	public  boolean isDead(){
+		
+		return dead;
 	}
 	
 	@Override

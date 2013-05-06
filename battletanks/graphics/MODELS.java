@@ -9,5 +9,7 @@ public class MODELS {
 		TANKBASE = new Model(".\\obj\\tankbase.obj", 0, 0, 6);
 		BULLET = new Model(".\\obj\\bullet.obj", 0, 0, 6);
 	}
+	
+	
 
 }

@@ -42,6 +42,8 @@ public class Gamestate {
 		obstacles = new ArrayList<GameObject>();
 		tanks = new ArrayList <GameObject>();
 		explosions = new ArrayList <GameObject>();
+		
+		
 		bullets = new ArrayList <GameObject>();
 		player = new Tank();
 		player.setController(new PlayerTankController((Tank) player));
@@ -153,9 +155,12 @@ public class Gamestate {
 		}
 		
 
-		
+		int alivecount = 0;
 		for(GameObject go : tanks){
 			go.update(deltaTime);
+			if(go.isDead() == false)
+				alivecount++;
+
 		}
 		
 		for(GameObject go : bullets){
@@ -328,9 +333,11 @@ public class Gamestate {
 			}
 		}
 		
-		if(tanks.size() == 0){
+		
+		if(alivecount == 0){
 			nextWave();
 		}
+
 
 	}
 	

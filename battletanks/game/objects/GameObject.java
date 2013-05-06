@@ -19,6 +19,8 @@ public interface GameObject {
 	public int getTeam();
 	public void setTeam(int i);
 	
+	public boolean isDead();
+	
 	
 
 }
