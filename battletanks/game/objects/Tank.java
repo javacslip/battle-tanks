@@ -149,10 +149,18 @@ public class Tank extends GameObjectImp {
 
 	@Override
 	public void doCollision(CollisionResult c) {
-		Vector3f tank = new Vector3f(this.base.getPos());
-		tank.sub(c.overlap);
-		tank.y = 0;
-		this.base.getPhys().setPos(tank);
+		Logger.getInstance().Log("collision call");
+		if (c.collidedWith instanceof Obstacle || c.collidedWith instanceof Tank) {
+			Logger.getInstance().Log(c.collidedWith.toString());
+			Vector3f tank = new Vector3f(this.base.getPos());
+			tank.sub(c.overlap);
+			tank.y = 0;
+			this.base.getPhys().setPos(tank);
+		}
+		else if(c.collidedWith instanceof Bullet){
+			Logger.getInstance().Log("bullet");
+			this.health--;
+		}
 		
 	}
 
