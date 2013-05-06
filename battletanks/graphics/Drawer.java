@@ -403,12 +403,20 @@ public class Drawer {
 		renderer.draw("WAVE: " + Gamestate.getInstance().getWave(), width - 350, height - 45);
 		if(Gamestate.getInstance().getWave() == 0){
 			renderer.draw("PRESS SPACE TO START", width/2 - 215,height/2 + 150);
+			renderer.draw("CONTROLS", width/2 - 600, height/2 + 300);
+			renderer.draw("Move: ", width/2 - 650, height/2 + 260);
+			renderer.draw("Arrow Keys", width/2 - 525, height/2 + 260);
+			renderer.draw("W A S D", width/2 - 525, height/2 + 220);
+			renderer.draw("Fire: ", width/2 - 645, height/2 + 180);
+			renderer.draw("Left Click", width/2 - 525, height/2 + 180);
+			renderer.draw("Aim: ", width/2 - 645, height/2 + 140);
+			renderer.draw("Mouse", width/2 - 525, height/2 + 140);
 		}
 		else if(Gamestate.getInstance().isRoundover()){
 			renderer.draw("WAVE COMPLETE", width/2 - 125,height/2 + 200);
 			renderer.draw("PRESS SPACE TO CONTINUE", width/2 - 215,height/2 + 150);
 		}
-		
+		renderer.draw("HEALTH", width/2 - 85, 75);
 		renderer.draw("ENEMIES LEFT: " + Gamestate.getInstance().getTankCount(), width - 350, height - 95);
 	}
 
