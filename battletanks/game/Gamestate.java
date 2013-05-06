@@ -9,6 +9,7 @@ import javax.vecmath.Vector3f;
 
 
 import battletanks.game.objects.EnemyTankController;
+import battletanks.game.objects.ExplosionCluster;
 import battletanks.game.objects.GameObject;
 import battletanks.game.objects.Obstacle;
 import battletanks.game.objects.PlayerTankController;
@@ -22,6 +23,8 @@ public class Gamestate {
 	private List<GameObject> tanks;
 	private List<GameObject> bullets;
 	
+	private List<GameObject> explosions;
+	
 	private GameObject player;
 	
 	private List<GameInput> playerInput;
@@ -34,6 +37,7 @@ public class Gamestate {
 		lasttime = System.currentTimeMillis();
 		obstacles = new ArrayList<GameObject>();
 		tanks = new ArrayList <GameObject>();
+		explosions = new ArrayList <GameObject>();
 		bullets = new ArrayList <GameObject>();
 		player = new Tank();
 		player.setController(new PlayerTankController((Tank) player));
@@ -48,6 +52,10 @@ public class Gamestate {
 		else if(o instanceof Tank){
 			tanks.add(o);
 		}
+		
+		else if(o instanceof ExplosionCluster){
+			explosions.add(o);
+		}
 		else{
 			bullets.add(o);
 		}
@@ -57,6 +65,10 @@ public class Gamestate {
 	public void removeObject(GameObject o){
 		removelist.add(o);
 
+	}
+	
+	public List<GameObject> getExplosions(){
+		return explosions;
 	}
 	
 	public GameObject getPlayer(){
@@ -104,7 +116,14 @@ public class Gamestate {
 				i = tanks.indexOf(o);
 				if (i != -1)
 					tanks.remove(i);
-			} else {
+			}
+			else if (o instanceof ExplosionCluster) {
+				i = explosions.indexOf(o);
+				if (i != -1)
+					explosions.remove(i);
+			}
+			
+			else {
 				i = bullets.indexOf(o);
 				if (i != -1)
 					bullets.remove(i);
@@ -128,6 +147,11 @@ public class Gamestate {
 		for(GameObject go : bullets){
 			go.update(deltaTime);
 		}
+		
+		for(GameObject go : explosions){
+			go.update(deltaTime);
+		}
+		
 		
 		player.update(deltaTime);
 		

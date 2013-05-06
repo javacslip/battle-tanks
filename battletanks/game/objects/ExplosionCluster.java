@@ -1,32 +1,46 @@
 package battletanks.game.objects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.vecmath.Vector3f;
 
 import battletanks.game.CollisionResult;
+import battletanks.game.Gamestate;
 import battletanks.graphics.MODELS;
 
 public class ExplosionCluster extends GameObjectImp {
+	int count = 0;
 	
 	public ExplosionCluster(){
-		Part explosion;
-		Vector3f pos, vel;
+		Part explosion = new Part(MODELS.EXPLOSION);
+		base = explosion;
+		
+
+		count = 0;
 		for(int i = (int) (Math.random()*10f+5f); i > 0; i--){
-			explosion = new Part(MODELS.EXPLOSION);
-			pos = new Vector3f((float)Math.random()-.5f, (float)Math.random()-.5f, (float)Math.random()-.5f);
-			vel = new Vector3f((float)Math.random()*.5f-.25f, (float)Math.random()*.5f-.25f, (float)Math.random()*.5f-.25f);
+			explosion = new ExplosionPoint(MODELS.EXPLOSION);
+			count++;
+			explosion.posJoin(base);
+			this.parts.add(explosion);
 			
-			explosion.getPhys().setPos(pos);
-			explosion.getPhys().setVel(vel);
+			
 		}
 		
 	}
 	
 	public void update(long dtime){
 		
-		
-		
+		base.update(dtime);
+		int dcount = 0;
+		for(Part p : this.parts){
+			if(p.getScale() <= 0.0f){
+				dcount++;
+			}
+		}
+		if(count <= dcount){
+			Gamestate.getInstance().removeObject(this);
+		}
 		super.update(dtime);
 		
 	}
