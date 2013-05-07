@@ -38,7 +38,7 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 	boolean fullscreen = true;
 	private final GLCanvas canvas;
 	private int winW = 1440, winH = 900;
-	private Point center = new Point(winW/2, winH/2);;
+	private Point center = new Point(winW / 2, winH / 2);;
 	private FPSAnimator animator;
 	Drawer draw;
 	private long time = System.nanoTime();
@@ -64,37 +64,37 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 
 		setUndecorated(true);
 		setSize(winW, winH);
-		
-		Toolkit t=Toolkit.getDefaultToolkit();
-		Image img = new java.awt.image.BufferedImage(1, 1, java.awt.image.BufferedImage.TYPE_INT_ARGB);
-		Cursor pointer= t.createCustomCursor(img, new Point(0,0), "none");
-		
+
+		Toolkit t = Toolkit.getDefaultToolkit();
+		Image img = new java.awt.image.BufferedImage(1, 1,
+				java.awt.image.BufferedImage.TYPE_INT_ARGB);
+		Cursor pointer = t.createCustomCursor(img, new Point(0, 0), "none");
+
 		setCursor(pointer);
 		setVisible(true);
 		animator = new FPSAnimator(canvas, 30); // create a 30 fps animator
 		animator.start();
 		canvas.requestFocus();
 
-		if(fullscreen == true){
-			
-			GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
-	
+		if (fullscreen == true) {
+
+			GraphicsEnvironment ge = GraphicsEnvironment
+					.getLocalGraphicsEnvironment();
+
 			ge.getDefaultScreenDevice().setFullScreenWindow(this);
-		}
-		else{
+		} else {
 			setUndecorated(false);
-		
-		//this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+			// this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		}
-		
-		
-		Rectangle r=this.getBounds();
-		center = new Point(r.x+r.width/2, r.y+r.height/2);
-		
+
+		Rectangle r = this.getBounds();
+		center = new Point(r.x + r.width / 2, r.y + r.height / 2);
+
 		try {
 			robot = new Robot();
 		} catch (AWTException e) {
-			
+
 			e.printStackTrace();
 		}
 	}
@@ -102,37 +102,40 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 	// gl display function
 	public void display(GLAutoDrawable drawable) {
 		Point mousepos = MouseInfo.getPointerInfo().getLocation();
-		
+
 		int mousex = center.x - mousepos.x;
 		int mousey = center.y - mousepos.y;
-		if(robot!=null)
-		robot.mouseMove(center.x, center.y);
-		Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.VIEWX, mousex));
-		Gamestate.getInstance().AddInput(new GameInput(INPUT_TYPE.VIEWY, mousey));
-		Logger.getInstance().debugVal("Mouse:", "<" + mousex +">," + "<" + mousey +">");
-		
-		
+		if (robot != null)
+			robot.mouseMove(center.x, center.y);
+		Gamestate.getInstance().AddInput(
+				new GameInput(INPUT_TYPE.VIEWX, mousex));
+		Gamestate.getInstance().AddInput(
+				new GameInput(INPUT_TYPE.VIEWY, mousey));
+		Logger.getInstance().debugVal("Mouse:",
+				"<" + mousex + ">," + "<" + mousey + ">");
+
 		time = System.currentTimeMillis();
 
 		Gamestate.getInstance().UpdateState(time);
 
 		draw.Draw(Gamestate.getInstance());
 
-		if(debugOut){
-			renderersm.beginRendering(drawable.getWidth(), drawable.getHeight());
+		if (debugOut) {
+			renderersm
+					.beginRendering(drawable.getWidth(), drawable.getHeight());
 			renderersm.setColor(.0f, 1f, 0.f, 1f);
 
-			
 			Logger.getInstance().display(renderersm);
 
 			renderersm.endRendering();
 		}
-			
-			rendererlg.beginRendering(drawable.getWidth(), drawable.getHeight());
-			renderersm.setColor(.0f, 1f, 0.f, 1f);
-			draw.drawUIText(rendererlg);
-			rendererlg.endRendering();
+
+		rendererlg.beginRendering(drawable.getWidth(), drawable.getHeight());
+		rendererlg.setColor(.0f, 1f, 0.f, .8f);
+		draw.drawUIText(rendererlg);
+		rendererlg.endRendering();
 		
+
 
 	}
 
@@ -161,22 +164,21 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 		winW = width;
 		winH = height;
 		draw.resize(width, height);
-		Rectangle r=this.getBounds();
-		center = new Point(r.x+r.width/2, r.y+r.height/2);
+		Rectangle r = this.getBounds();
+		center = new Point(r.x + r.width / 2, r.y + r.height / 2);
 	}
 
 	// mouse pressed even callback function
 	public void mousePressed(MouseEvent e) {
-		if(e.getButton() == e.BUTTON1){
+		if (e.getButton() == e.BUTTON1) {
 			Gamestate.getInstance().AddInput(
 					new GameInput(INPUT_TYPE.FIRE_PRESSED));
 		}
-	
 
 	}
 
 	public void mouseReleased(MouseEvent e) {
-		if(e.getButton() == e.BUTTON1){
+		if (e.getButton() == e.BUTTON1) {
 			Gamestate.getInstance().AddInput(
 					new GameInput(INPUT_TYPE.FIRE_RELEASED));
 		}
@@ -195,9 +197,9 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 			break;
 		case KeyEvent.VK_Z:
 			debugOut = !debugOut;
-			
+
 			break;
-			
+
 		case KeyEvent.VK_W:
 		case KeyEvent.VK_UP:
 			Gamestate.getInstance().AddInput(
@@ -227,8 +229,7 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 		case KeyEvent.VK_F1:
 			Gamestate.getInstance().reset();
 			break;
-			
-			
+
 		}
 
 	}
@@ -283,7 +284,7 @@ public class TanksMain extends Frame implements GLEventListener, KeyListener,
 	}
 
 	public void mouseMoved(MouseEvent e) {
-		
+
 	}
 
 	public void actionPerformed(ActionEvent e) {
