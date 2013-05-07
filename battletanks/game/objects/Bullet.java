@@ -22,7 +22,7 @@ public class Bullet extends GameObjectImp {
 
 	private LinkedList<Vector3f> oldPos;
 	private LinkedList<Vector2f> oldDir;
-	private int count;
+	private int age;
 	private int team;
 
 	public Bullet() {
@@ -33,6 +33,7 @@ public class Bullet extends GameObjectImp {
 		base.getPhys().setMaxvel(10f);
 		base.getPhys().setMaxaccel(10.0f);
 		base.getPhys().setRadius(.15f);
+		
 
 
 		oldPos = new LinkedList<Vector3f>();
@@ -59,7 +60,7 @@ public class Bullet extends GameObjectImp {
 		this.base.getPhys().setVel(v);
 
 		this.base.getPhys().setAccel(gravity);
-		count = 0;
+		
 
 	}
 
@@ -72,7 +73,9 @@ public class Bullet extends GameObjectImp {
 	}
 
 	public void update(long dtime) {
-
+		
+		
+		if(dead == false){
 		//Logger.getInstance().Log("bulletpos:" + this.base.getPhys().getPos());
 		this.base.getPhys().setAccel(gravity);
 		if (this.base.getPos().y < -.321f) {
@@ -97,14 +100,25 @@ public class Bullet extends GameObjectImp {
 
 		oldPos.add(new Vector3f(this.base.getPhys().getPos()));
 		oldDir.add(new Vector2f(this.base.getPhys().getDir()));
+		}
+		else{
+			age++;
+			if( age > 60){
+				Gamestate.getInstance().removeObject(this);
+			}
+		}
 
 	}
 	
+	public int getAge() {
+		return age;
+	}
+
 	private void explode(){
 		Vector3f bpos = new Vector3f(this.getBase().getPos());
 		bpos.sub(this.getBase().getPhys().getVel());
 		Gamestate.getInstance().addObject(new ExplosionCluster(bpos));
-		Gamestate.getInstance().removeObject(this);
+		this.dead = true;
 		SOUNDS.BULLET_HIT.play();
 	}
 

@@ -38,8 +38,10 @@ public class Gamestate {
 	private List<GameInput> playerInput;
 	private int starthealth;
 	long lasttime;
+	private boolean gameover;
 
 	private Gamestate(int wave, int health) {
+		gameover = false;
 		starthealth = health;
 		alivecount =0;
 		this.wave = wave;
@@ -315,6 +317,8 @@ public class Gamestate {
 
 		cr = new CollisionResult();
 		for (GameObject go : bullets) {
+			if(go.isDead())
+				continue;
 			x = go.getBase().getPhys().getPos().x
 					- player.getBase().getPhys().getPos().x;
 			y = go.getBase().getPhys().getPos().y
@@ -365,6 +369,11 @@ public class Gamestate {
 				}
 			}
 		}
+		
+		if(((Tank)player).getHealth() <= 0){
+			this.gameover  = true;
+		
+		}
 
 		if (alivecount == 0) {
 			roundover = true;
@@ -373,7 +382,10 @@ public class Gamestate {
 	}
 
 	public void nextRound() {
-		if (roundover || wave == 0) {
+		if(gameover)
+			reset();
+		
+		else if (roundover || wave == 0) {
 			nextWave();
 		}
 	}
@@ -465,6 +477,12 @@ public class Gamestate {
 			Gamestate.instance = new Gamestate(startTankCount, 2);
 
 		return Gamestate.instance;
+	}
+
+
+
+	public boolean isGameOver() {
+		return gameover;
 	}
 
 }

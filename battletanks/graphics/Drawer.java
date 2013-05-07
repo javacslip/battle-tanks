@@ -338,16 +338,23 @@ public class Drawer {
 	}
 
 	private void DrawLineGeometry() {
+		
+		gl.glEnable (gl.GL_BLEND);
+		gl.glBlendFunc (gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA);
 
-		gl.glColor3f(0.0F, 1F, 1F);
+		
 
 		for (GameObject ob : Gamestate.getInstance().getBullets()) {
 			Bullet b = (Bullet) ob;
 			Iterator<Vector3f> it = b.getOldPos();
 			Iterator<Vector2f> id = b.getOldDir();
 			int c = 0;
-
-			while (c < 25 && it.hasNext()) {
+			
+			float acolor = 1f - (float)b.getAge()/30f;
+			while (c < 40  && it.hasNext()) {
+				
+				gl.glColor4f(0, 1, 1, acolor);
+				acolor = acolor-0.025f;
 				c++;
 				Vector3f p = it.next();
 				Vector2f d = id.next();
@@ -413,12 +420,22 @@ public class Drawer {
 			renderer.draw("Left Click", width/2 - 525, height/2 + 180);
 			renderer.draw("Aim: ", width/2 - 645, height/2 + 140);
 			renderer.draw("Mouse", width/2 - 525, height/2 + 140);
+			renderer.draw("HEALTH", width/2 - 85, 75);
 		}
+		
+		else if(Gamestate.getInstance().isGameOver()){
+			renderer.draw("YOU DIED", width/2 - 75,height/2 + 200);
+		
+			renderer.draw("PRESS SPACE TO RESTART", width/2 - 215,height/2 + 150);
+		}
+		
 		else if(Gamestate.getInstance().isRoundover()){
 			renderer.draw("WAVE COMPLETE", width/2 - 125,height/2 + 200);
 			renderer.draw("PRESS SPACE TO CONTINUE", width/2 - 215,height/2 + 150);
 		}
-		renderer.draw("HEALTH", width/2 - 85, 75);
+		
+
+		
 		renderer.draw("ENEMIES LEFT: " + Gamestate.getInstance().getTankCount(), width - 350, height - 95);
 
 	}

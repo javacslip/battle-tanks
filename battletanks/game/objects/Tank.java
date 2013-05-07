@@ -48,7 +48,7 @@ public class Tank extends GameObjectImp {
 		super.update(dtime);
 		if(this.health == 0 && this.dead == false){
 			if(this == Gamestate.getInstance().getPlayer()){
-				Gamestate.getInstance().reset();
+				this.setController(new NoController());
 			}
 
 			SOUNDS.TANK_EXPLODE.play();
