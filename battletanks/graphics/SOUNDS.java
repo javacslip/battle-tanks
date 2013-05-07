@@ -7,6 +7,7 @@ public enum SOUNDS{
 	BULLET_HIT("sounds/Explosion74.wav"),
 	FIRE_GUN("sounds/Explosion71.wav"),
 	TANK_EXPLODE("sounds/Explosion79.wav");
+	//MUSIC("sounds/Explosion79.wav");
 	
 	
 	private Clip clip;

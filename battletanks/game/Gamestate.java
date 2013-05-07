@@ -36,10 +36,11 @@ public class Gamestate {
 	int alivecount;
 
 	private List<GameInput> playerInput;
-
+	private int starthealth;
 	long lasttime;
 
-	private Gamestate(int wave) {
+	private Gamestate(int wave, int health) {
+		starthealth = health;
 		alivecount =0;
 		this.wave = wave;
 		removelist = new ArrayList<GameObject>();
@@ -67,9 +68,7 @@ public class Gamestate {
 		} else {
 			player.setController(new PlayerTankController((Tank) player));
 			
-			tankCount = 1;
-			for (int i = 1; i < wave; i++)
-				tankCount = tankCount * 2;
+			tankCount = wave + (int) Math.pow(wave, 1.2d);
 
 			setUpMap();
 		}
@@ -438,12 +437,12 @@ public class Gamestate {
 		player.getBase().getPhys().setDir(0, 0);
 		player.setTeam(1);
 
-		((Tank) player).setHealth(2 + wave);
+		((Tank) player).setHealth(starthealth);
 
 	}
 
 	public void nextWave() {
-		Gamestate.instance = new Gamestate(wave + 1);
+		Gamestate.instance = new Gamestate(wave + 1, starthealth +1);
 	}
 
 	public int getWave() {
@@ -455,7 +454,7 @@ public class Gamestate {
 	}
 
 	public void reset() {
-		Gamestate.instance = new Gamestate(startTankCount);
+		Gamestate.instance = new Gamestate(startTankCount, 2);
 
 	}
 
@@ -463,7 +462,7 @@ public class Gamestate {
 
 	public static Gamestate getInstance() {
 		if (Gamestate.instance == null)
-			Gamestate.instance = new Gamestate(startTankCount);
+			Gamestate.instance = new Gamestate(startTankCount, 2);
 
 		return Gamestate.instance;
 	}
