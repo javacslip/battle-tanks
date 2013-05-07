@@ -22,3 +22,12 @@ tank game for graphics final project
 *	To run in fullscreen mode make sure to add the VM parameter 
 
 	-Dsun.java2d.noddraw=true
+
+
+### Releases
+
+*	32-bit Windows
+	https://mega.co.nz/#!IxRTyARK!OfwGvyGHIJfFr5BtvW4DI1k1DtFjoTUkoeRLF6Isk8w
+
+*	64-bit Windows
+	https://mega.co.nz/#!95ZhiayC!FPPiEAlMYu4Ja8JELn9zcX84SAIIXldHU0evBHJM3tw
