@@ -50,8 +50,6 @@ public class Drawer {
 
 		znear = 0.01f;
 		zfar = 900.0f;
-		
-		
 
 		showBoundSphere = false;
 
@@ -200,7 +198,73 @@ public class Drawer {
 		gl.glEnable(gl.GL_BLEND);
 		gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA);
 
-		gl.glColor4f(0, 1, 0, .7f);
+		gl.glPointSize(7f);
+		gl.glEnable(gl.GL_POINT_SMOOTH);
+
+		Vector3f p = Gamestate.getInstance().getPlayer().getBase().getPos();
+		float dirp = Gamestate.getInstance().getPlayer().getBase().getDir().x + 90;
+
+		gl.glBegin(gl.GL_POINTS);
+		gl.glColor4f(0, 1, 0, .5f);
+		gl.glVertex2f(0 + width / 2, 150f);
+		gl.glEnd();
+
+		for (GameObject go : Gamestate.getInstance().getTanks()) {
+			Vector3f t = go.getBase().getPos();
+			float x = (t.x - p.x) * 2f;
+			float y = (t.z - p.z) * 2f;
+
+			float angle = (float) Math.toRadians(dirp
+					- Math.toDegrees(Math.atan2(y, x)));
+
+			float r = (float) Math.sqrt(x * x + y * y);
+
+			x = (float) Math.sin(angle) * r;
+			y = (float) Math.cos(angle) * r;
+
+			if (x > 100f || x < -100f || y > 100f || y < -100f) {
+
+			} else {
+
+				if (go.isDead() == true)
+					gl.glColor4f(.6f, .6f, .6f, .5f);
+				else
+					gl.glColor4f(1, 0, 0, .5f);
+
+				gl.glBegin(gl.GL_POINTS);
+				gl.glVertex2f(x + width / 2, y + 150f);
+				gl.glEnd();
+			}
+		}
+		
+		gl.glDisable(gl.GL_POINT_SMOOTH);
+		for (GameObject go : Gamestate.getInstance().getObstacles()) {
+			Vector3f t = go.getBase().getPos();
+			float x = (t.x - p.x) * 2f;
+			float y = (t.z - p.z) * 2f;
+
+			float angle = (float) Math.toRadians(dirp
+					- Math.toDegrees(Math.atan2(y, x)));
+
+			float r = (float) Math.sqrt(x * x + y * y);
+
+			x = (float) Math.sin(angle) * r;
+			y = (float) Math.cos(angle) * r;
+
+			if (x > 100f || x < -100f || y > 100f || y < -100f) {
+
+			} else {
+
+			
+				gl.glColor4f(1f, 2f, 1f, .1f);
+
+				gl.glBegin(gl.GL_POINTS);
+				gl.glVertex2f(x + width / 2, y + 150f);
+				gl.glEnd();
+			}
+		}
+		
+		gl.glColor4f(0, 1, 0, .5f);
 
 		// draw HUD
 		// aiming reticle
@@ -230,7 +294,7 @@ public class Drawer {
 		gl.glEnable(gl.GL_BLEND);
 		gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA);
 
-		gl.glColor4f(0, 1, 0, .4f);
+		gl.glColor4f(0, 1, 0, .3f);
 
 		gl.glBegin(gl.GL_LINE_LOOP);
 		rx += 60;
@@ -244,12 +308,31 @@ public class Drawer {
 		gl.glEnable(gl.GL_BLEND);
 		gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glBegin(gl.GL_QUADS);
-		gl.glColor4f(0, 1, 0, .2f);
+		gl.glColor4f(0, 1, 0, .1f);
 		gl.glVertex2f(rx + 20, lh + 135);
 		gl.glVertex2f(rx + 50, lh + 135);
 		gl.glVertex2f(rx + 50, lh + 135 - (per * 180.f));
 		gl.glVertex2f(rx + 20, lh + 135 - (per * 180.f));
 		gl.glEnd();
+
+		gl.glColor4f(0, 1, 0, .3f);
+
+		gl.glBegin(gl.GL_LINE_LOOP);
+
+		gl.glVertex2f(center.x - 100, 150 + 100);
+		gl.glVertex2f(center.x + 100, 150 + 100);
+		gl.glVertex2f(center.x + 100, 150 - 100);
+		gl.glVertex2f(center.x - 100, 150 - 100);
+		gl.glEnd();
+
+		gl.glBegin(gl.GL_QUADS);
+		gl.glColor4f(0, 1, 0, .1f);
+		gl.glVertex2f(center.x - 100, 150 + 100);
+		gl.glVertex2f(center.x + 100, 150 + 100);
+		gl.glVertex2f(center.x + 100, 150 - 100);
+		gl.glVertex2f(center.x - 100, 150 - 100);
+		gl.glEnd();
+
 		// player health status
 		int hp = player.getHealth();
 		float startX = center.x - hp / 2f * 60f;
@@ -274,20 +357,20 @@ public class Drawer {
 
 		}
 		lasthealth = hp;
-		
-		if(hitfade > 0){
-			
-		gl.glEnable(gl.GL_BLEND);
-		gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA);
-		gl.glBegin(gl.GL_QUADS);
-		gl.glColor4f(1, 0, 0, (float)hitfade/ 70f );
 
-		gl.glVertex2f(0, 0);
-		gl.glVertex2f(0,height);
-		gl.glVertex2f(width,height);
-		gl.glVertex2f(width, 0);
-		gl.glEnd();
-		hitfade--;
+		if (hitfade > 0) {
+
+			gl.glEnable(gl.GL_BLEND);
+			gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA);
+			gl.glBegin(gl.GL_QUADS);
+			gl.glColor4f(1, 0, 0, (float) hitfade / 70f);
+
+			gl.glVertex2f(0, 0);
+			gl.glVertex2f(0, height);
+			gl.glVertex2f(width, height);
+			gl.glVertex2f(width, 0);
+			gl.glEnd();
+			hitfade--;
 		}
 
 		// set up 3d drawing
@@ -338,40 +421,45 @@ public class Drawer {
 	}
 
 	private void DrawLineGeometry() {
-		
-		gl.glEnable (gl.GL_BLEND);
-		gl.glBlendFunc (gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA);
 
-		
+		gl.glEnable(gl.GL_BLEND);
+		gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA);
 
 		for (GameObject ob : Gamestate.getInstance().getBullets()) {
 			Bullet b = (Bullet) ob;
 			Iterator<Vector3f> it = b.getOldPos();
 			Iterator<Vector2f> id = b.getOldDir();
 			int c = 0;
-			
-			float acolor = 1f - (float)b.getAge()/30f;
-			while (c < 40  && it.hasNext()) {
-				
-				gl.glColor4f(0, 1, 1, acolor);
-				acolor = acolor-0.025f;
-				c++;
+
+			float acolor = 1f - (float) b.getAge() / 30f;
+			while (c < 40 && it.hasNext()) {
+
 				Vector3f p = it.next();
 				Vector2f d = id.next();
-				gl.glPushMatrix();
-				gl.glTranslatef(p.x, p.y, p.z);
+				acolor = acolor - 0.025f;
+				if (acolor <= 0.f)
+					acolor = 0.f;
+				else {
 
-				gl.glRotatef(270, 0, 1, 0f);
+					gl.glColor4f(0, 1, 1, acolor);
+					c++;
 
-				gl.glRotatef(-d.x, 0, 1.0f, 0f);
-				gl.glRotatef(d.y, 0.0f, 0, 1);
+					gl.glPushMatrix();
+					gl.glTranslatef(p.x, p.y, p.z);
 
-				gl.glRotatef(90, 0, 1, 0f);
-				ob.getBase().getModel().Draw(gl);
-				if (showBoundSphere)
-					glut.glutSolidSphere(ob.getBase().getPhys().getRadius(), 5,
-							5);
-				gl.glPopMatrix();
+					gl.glRotatef(270, 0, 1, 0f);
+
+					gl.glRotatef(-d.x, 0, 1.0f, 0f);
+					gl.glRotatef(d.y, 0.0f, 0, 1);
+
+					gl.glRotatef(90, 0, 1, 0f);
+					ob.getBase().getModel().Draw(gl);
+					if (showBoundSphere)
+						glut.glutSolidSphere(
+								ob.getBase().getPhys().getRadius(), 5, 5);
+
+					gl.glPopMatrix();
+				}
 			}
 		}
 
@@ -406,37 +494,40 @@ public class Drawer {
 		return showBoundSphere;
 	}
 
-	
-	public void drawUIText(TextRenderer renderer){
-		//renderer.draw("HEALTH", 30, height - 25);
-		renderer.draw("WAVE: " + Gamestate.getInstance().getWave(), width - 350, height - 45);
-		if(Gamestate.getInstance().getWave() == 0){
-			renderer.draw("PRESS SPACE TO START", width/2 - 215,height/2 + 150);
-			renderer.draw("CONTROLS", width/2 - 600, height/2 + 300);
-			renderer.draw("Move: ", width/2 - 650, height/2 + 260);
-			renderer.draw("Arrow Keys", width/2 - 525, height/2 + 260);
-			renderer.draw("W A S D", width/2 - 525, height/2 + 220);
-			renderer.draw("Fire: ", width/2 - 645, height/2 + 180);
-			renderer.draw("Left Click", width/2 - 525, height/2 + 180);
-			renderer.draw("Aim: ", width/2 - 645, height/2 + 140);
-			renderer.draw("Mouse", width/2 - 525, height/2 + 140);
-			renderer.draw("HEALTH", width/2 - 85, 75);
+	public void drawUIText(TextRenderer renderer) {
+		// renderer.draw("HEALTH", 30, height - 25);
+		renderer.draw("WAVE: " + Gamestate.getInstance().getWave(),
+				width - 350, height - 45);
+		if (Gamestate.getInstance().getWave() == 0) {
+			renderer.draw("PRESS SPACE TO START", width / 2 - 215,
+					height / 2 + 150);
+			renderer.draw("CONTROLS", width / 2 - 600, height / 2 + 300);
+			renderer.draw("Move: ", width / 2 - 650, height / 2 + 260);
+			renderer.draw("Arrow Keys", width / 2 - 525, height / 2 + 260);
+			renderer.draw("W A S D", width / 2 - 525, height / 2 + 220);
+			renderer.draw("Fire: ", width / 2 - 645, height / 2 + 180);
+			renderer.draw("Left Click", width / 2 - 525, height / 2 + 180);
+			renderer.draw("Aim: ", width / 2 - 645, height / 2 + 140);
+			renderer.draw("Mouse", width / 2 - 525, height / 2 + 140);
+			renderer.draw("HEALTH", width / 2 - 85, 75);
 		}
-		
-		else if(Gamestate.getInstance().isGameOver()){
-			renderer.draw("YOU DIED", width/2 - 75,height/2 + 200);
-		
-			renderer.draw("PRESS SPACE TO RESTART", width/2 - 215,height/2 + 150);
-		}
-		
-		else if(Gamestate.getInstance().isRoundover()){
-			renderer.draw("WAVE COMPLETE", width/2 - 125,height/2 + 200);
-			renderer.draw("PRESS SPACE TO CONTINUE", width/2 - 215,height/2 + 150);
-		}
-		
 
-		
-		renderer.draw("ENEMIES LEFT: " + Gamestate.getInstance().getTankCount(), width - 350, height - 95);
+		else if (Gamestate.getInstance().isGameOver()) {
+			renderer.draw("YOU DIED", width / 2 - 75, height / 2 + 200);
+
+			renderer.draw("PRESS SPACE TO RESTART", width / 2 - 215,
+					height / 2 + 150);
+		}
+
+		else if (Gamestate.getInstance().isRoundover()) {
+			renderer.draw("WAVE COMPLETE", width / 2 - 125, height / 2 + 200);
+			renderer.draw("PRESS SPACE TO CONTINUE", width / 2 - 215,
+					height / 2 + 150);
+		}
+
+		renderer.draw(
+				"ENEMIES LEFT: " + Gamestate.getInstance().getTankCount(),
+				width - 350, height - 95);
 
 	}
 

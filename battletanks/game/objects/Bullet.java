@@ -103,7 +103,7 @@ public class Bullet extends GameObjectImp {
 		}
 		else{
 			age++;
-			if( age > 60){
+			if( age > 30){
 				Gamestate.getInstance().removeObject(this);
 			}
 		}

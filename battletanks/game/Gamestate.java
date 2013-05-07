@@ -409,13 +409,13 @@ public class Gamestate {
 
 		addObject(zero);
 		
-		for (int i = 0; i < 52; i++) {
+		for (int i = 0; i < 75; i++) {
 			float size = 1f;
 			ob = new Obstacle(size);
 			do {
 				foundspot = true;
-				pos = new Vector3f(rf.nextFloat() * 50f - 25f,
-						size / 2f - .145f, rf.nextFloat() * 50f - 25f);
+				pos = new Vector3f(rf.nextFloat() * 80f - 40f,
+						size / 2f - .145f, rf.nextFloat() * 80f - 40f);
 				for (GameObject o : obstacles) {
 					tmp = new Vector3f(o.getBase().getPhys().getPos());
 					tmp.sub(pos);
@@ -438,7 +438,7 @@ public class Gamestate {
 			do {
 				pos = new Vector3f(rf.nextFloat() * 80f - 40f, 0f,
 						rf.nextFloat() * 80f - 40f);
-			} while (pos.length() < 30);
+			} while (pos.length() < 35);
 			et.getBase().getPhys().setPos(pos);
 			et.getBase().getPhys().setDir(rf.nextFloat() * 180, 0);
 			et.setTeam(2);
