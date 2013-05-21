@@ -243,8 +243,8 @@ public class Gamestate {
 					max.x = r.getOverlapVector().x;
 					c.collidedWith = r.getCollided();
 				}
-				if (Math.abs(r.getOverlapVector().y) > Math.abs(max.y)) {
-					max.y = r.getOverlapVector().y;
+				if (Math.abs(r.getOverlapVector().z) > Math.abs(max.z)) {
+					max.z = r.getOverlapVector().z;
 				}
 			}
 			c.setVector(max);
@@ -306,8 +306,8 @@ public class Gamestate {
 				max.x = r.getOverlapVector().x;
 				c.collidedWith = r.getCollided();
 			}
-			if (Math.abs(r.getOverlapVector().y) > Math.abs(max.y)) {
-				max.y = r.getOverlapVector().y;
+			if (Math.abs(r.getOverlapVector().z) > Math.abs(max.z)) {
+				max.y = r.getOverlapVector().z;
 			}
 		}
 		c.setVector(max);
